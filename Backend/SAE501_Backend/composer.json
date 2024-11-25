@@ -18,6 +18,8 @@
         "symfony/framework-bundle": "7.1.*",
         "symfony/maker-bundle": "^1.61",
         "symfony/runtime": "7.1.*",
+        "symfony/security-bundle": "7.1.*",
+        "symfony/security-core": "7.1.*",
         "symfony/yaml": "7.1.*"
     },
     "config": {
