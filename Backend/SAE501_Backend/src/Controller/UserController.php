@@ -34,25 +34,69 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}/get', name: 'view_profile', methods: ['GET'])]
-    public function viewProfile(): Response
+    public function viewProfile(Request $request, EntityManagerInterface $em, $id): Response
     {
-        $user = $this->getUser();
-        return $this->json($user);
+        // $user = $this->getUser();
+        // return $this->json($user);
+
+        $users = $em->getRepository(User::class)->find($id);
+        if ($users) {
+            $data = [
+                'id' => $users->getId(),
+                'name' => $users->getName(),
+                'email' => $users->getEmail(),
+                'password' => $users->getPassword()
+            ];
+            return $this->json([$data], Response::HTTP_OK);
+        } else {
+            return $this->json(['message' => 'Pas de categorie trouvée'], Response::HTTP_OK);
+        }
     }
 
     #[Route('/user/{id}/put', name: 'edit_profile', methods: ['PUT'])]
-    public function editProfile(Request $request, EntityManagerInterface $em, UserInterface $user): Response {
-        $data = json_decode($request->getContent(), true);
-        $user = new User();
-        if (isset($data['nom'])) {
-            $user->setName($data['name']);
+    public function editProfile(Request $request, EntityManagerInterface $em, $id): Response {
+        // $data = json_decode($request->getContent(), true);
+        // $user = new User();
+        // if (isset($data['nom'])) {
+        //     $user->setName($data['name']);
+        // }
+        // if (isset($data['email'])) {
+        //     $user->setEmail($data['email']);
+        // }
+        // $em->persist($user);
+        // $em->flush();
+        // return $this->json(['message' => 'Profil mis à jour avec succès']);
+
+        $users = $em->getRepository(User::class)->find($id);
+
+        if ($users) {
+            $data = json_decode($request->getContent(), true);
+
+            if (isset($data['name'])) {
+                $users->setName($data['name']);
+            } else {
+                return $this->json(['message' => 'Le champ "name" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+
+            if (isset($data['email'])) {
+                $users->setEmail($data['email']);
+            } else {
+                return $this->json(['message' => 'Le champ "email" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+
+            if (isset($data['password'])) {
+                $users->setPassword($data['password']);
+            } else {
+                return $this->json(['message' => 'Le champ "password" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+            
+            $em->persist($users);
+            $em->flush();
+
+            return $this->json(['message' => 'user mise à jour avec succès'], Response::HTTP_OK);
         }
-        if (isset($data['email'])) {
-            $user->setEmail($data['email']);
-        }
-        $em->persist($user);
-        $em->flush();
-        return $this->json(['message' => 'Profil mis à jour avec succès']);
+
+        return $this->json(['message' => 'Pas de user trouvée'], Response::HTTP_NOT_FOUND);
     }
 
     #[Route('/user/post', name: 'create_user', methods: ['POST'])]
@@ -68,5 +112,20 @@ class UserController extends AbstractController
         $em->persist($user);
         $em->flush();
         return $this->json(['message' => 'Utilisateur créé avec succès']);
+    }
+
+    #[Route('/user/{id}/delete', name: 'delete_user_by_id', methods: ['DELETE'])]
+    public function DeleteCategorieById(EntityManagerInterface $em, $id): Response
+    {
+        $user = $em->getRepository(User::class)->find($id);
+
+        if ($user) {
+            $em->remove($user);
+            $em->flush();
+
+            return $this->json(['message' => 'Categorie supprimée avec succès'], Response::HTTP_OK);
+        }
+
+        return $this->json(['message' => 'Pas de categorie trouvée'], Response::HTTP_NOT_FOUND);
     }
 }

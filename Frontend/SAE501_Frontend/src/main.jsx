@@ -7,6 +7,7 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import TestApiPost from './pages/TestApiPost.jsx'
 import TestApiGet from './pages/TestApiGet.jsx'
+import TestApiPut from './pages/TestApiPut.jsx'
 
 const router = createBrowserRouter(
 [
@@ -25,6 +26,10 @@ const router = createBrowserRouter(
       {
         path: "/list",
         element: <TestApiGet/>
+      },
+      {
+        path: "/update",
+        element: <TestApiPut/>
       }
     ]
   }

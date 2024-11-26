@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Api from "../components/Api";
+import TestApiDelete from "./TestApiDelete";
 
 function TestApiGet() {
     const [user, setUser] = useState([])
@@ -25,6 +26,7 @@ function TestApiGet() {
                     return (
                         <div id={index} key={users.id}>
                             <p>{users.id} {users.name}</p>
+                            <TestApiDelete id={users.id}/>
                         </div>
                     )
                 })}
