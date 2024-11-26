@@ -5,6 +5,8 @@ import Accueil from "./pages/Accueil.jsx"
 import './index.css'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import TestApiPost from './pages/TestApiPost.jsx'
+import TestApiGet from './pages/TestApiGet.jsx'
 
 const router = createBrowserRouter(
 [
@@ -15,6 +17,14 @@ const router = createBrowserRouter(
       {
         path: "/",
         element: <Accueil/>
+      },
+      {
+        path: "/register",
+        element: <TestApiPost/>
+      },
+      {
+        path: "/list",
+        element: <TestApiGet/>
       }
     ]
   }
