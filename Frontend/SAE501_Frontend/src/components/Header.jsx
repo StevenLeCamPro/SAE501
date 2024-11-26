@@ -11,7 +11,7 @@ function Header() {
                     <a href="/" className="text-white">Accueil</a>
                     <a href="/medicaments" className="text-white">Médicaments</a>
                     <a href="/categories" className="text-white">Visite Virtuelle</a>
-                    <a href="/recherche" className="text-white">Se connecter</a>
+                    <a href="/login" className="text-white">Se connecter</a>
                 </div>
             </div>
         </>
