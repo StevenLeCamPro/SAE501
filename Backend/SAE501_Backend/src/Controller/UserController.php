@@ -105,7 +105,14 @@ class UserController extends AbstractController
         $user = new User();
 
         $user->setName($data['name']);
+        $user->setFirstName($data['firstName']);
+        $user->setBirthDate(new \DateTime($data['birthDate']));
+        $user->setPhone($data['phone']);
+        $user->setAddress($data['address']);
         $user->setEmail($data['email']);
+        $currentDateTime = new \DateTimeImmutable('now');
+        $currentDateTime->format('Y-m-d');
+        $user->setCreatedAt($currentDateTime);
         $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
         $user->setPassword($hashedPassword);
         $user->setRoles(['ROLES_USER']);

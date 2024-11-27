@@ -4,7 +4,7 @@ function Accueil() {
     return (
         <>
             <div className="bg-orange-100 pb-10">
-                <div className="bg-cover bg-center h-70 lg:py-52 relative" style={{ backgroundImage: "url('/bg_pharm.png')" }}>
+                <div className="bg-cover bg-center h-70 lg:py-52 relative" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                     <div className="absolute inset-0 bg-black opacity-65"></div>
                     <h1 className="relative text-4xl text-white py-24 px-16 text-center md:text-5xl lg:text-6xl lg:py-32 lg:px-32">Bienvenue sur PharmInnov</h1>
                 </div>
