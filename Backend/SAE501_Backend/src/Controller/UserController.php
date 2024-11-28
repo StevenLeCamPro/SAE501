@@ -55,17 +55,7 @@ class UserController extends AbstractController
 
     #[Route('/user/{id}/put', name: 'edit_profile', methods: ['PUT'])]
     public function editProfile(Request $request, EntityManagerInterface $em, $id): Response {
-        // $data = json_decode($request->getContent(), true);
-        // $user = new User();
-        // if (isset($data['nom'])) {
-        //     $user->setName($data['name']);
-        // }
-        // if (isset($data['email'])) {
-        //     $user->setEmail($data['email']);
-        // }
-        // $em->persist($user);
-        // $em->flush();
-        // return $this->json(['message' => 'Profil mis à jour avec succès']);
+    
 
         $users = $em->getRepository(User::class)->find($id);
 
@@ -78,6 +68,12 @@ class UserController extends AbstractController
                 return $this->json(['message' => 'Le champ "name" est requis'], Response::HTTP_BAD_REQUEST);
             }
 
+            if (isset($data['firstName'])) {
+                $users->setFirstName($data['firstName']);
+            } else {
+                return $this->json(['message' => 'Le champ "firstName" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+
             if (isset($data['email'])) {
                 $users->setEmail($data['email']);
             } else {
@@ -88,6 +84,12 @@ class UserController extends AbstractController
                 $users->setPassword($data['password']);
             } else {
                 return $this->json(['message' => 'Le champ "password" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+
+            if (isset($data['phone'])) {
+                $users->setPhone($data['phone']);
+            } else {
+                return $this->json(['message' => 'Le champ "phone" est requis'], Response::HTTP_BAD_REQUEST);
             }
             
             $em->persist($users);
