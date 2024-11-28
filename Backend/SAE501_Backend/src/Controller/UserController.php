@@ -112,6 +112,10 @@ class UserController extends AbstractController
     #[Route('/user/post', name: 'create_user', methods: ['POST'])]
     public function createUser(Request $request, EntityManagerInterface $em): Response {
         $data = json_decode($request->getContent(), true);
+
+        if ($data['password'] != $data['confirmPassword']) {
+            return $this->json(['message' => 'Le mot de passe est la confirmation de mot de passe ne correspondent pas'], Response::HTTP_BAD_REQUEST);
+        }else{
         $user = new User();
 
         $user->setName($data['name']);
@@ -130,6 +134,7 @@ class UserController extends AbstractController
         $em->persist($user);
         $em->flush();
         return $this->json(['message' => 'Utilisateur créé avec succès']);
+    }
     }
 
     #[Route('/user/{id}/delete', name: 'delete_user_by_id', methods: ['DELETE'])]
