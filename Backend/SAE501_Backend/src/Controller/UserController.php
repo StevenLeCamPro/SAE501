@@ -80,10 +80,18 @@ class UserController extends AbstractController
                 return $this->json(['message' => 'Le champ "email" est requis'], Response::HTTP_BAD_REQUEST);
             }
 
+            if (!isset($data['confirmPassword'])) {
+                return $this->json(['message' => 'Le champs confirmation de mot de passe est obligatoire'], Response::HTTP_BAD_REQUEST);
+            }
+
             if (isset($data['password'])) {
                 $users->setPassword($data['password']);
             } else {
                 return $this->json(['message' => 'Le champ "password" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+
+            if ($data['password'] != $data['confirmPassword']) {
+                return $this->json(['message' => 'Le mot de passe est la confirmation de mot de passe ne correspondent pas'], Response::HTTP_BAD_REQUEST);
             }
 
             if (isset($data['phone'])) {
