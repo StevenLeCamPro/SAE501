@@ -65,6 +65,13 @@ function PDC() {
                     <h2 className="mb-2 font-bold text-xl lg:text-3xl">7.Changements de Cette Politique de Confidentialité</h2>
                     <p className="px-4 text-justify font-nunito text-lg mb-6 lg:text-xl lg:mb-12">Nous nous réservons le droit de mettre à jour cette politique de confidentialité de temps à autre. Nous vous informerons de tout changement en publiant la nouvelle politique sur cette page. Nous vous conseillons de vérifier cette page périodiquement pour toute modification.</p>
                 </section>
+                <section>
+                        <div className="text-center">
+                            <p>Pour toute question concernant notre politique de confidentialité, veuillez nous contacter à :</p>
+                            <p><NavLink to="mailto:contact@pharminnov.fr" className="text-emerald-600">contact@pharminnov.fr</NavLink></p>
+                            <p>17 Rue Jablinot, 77100 Meaux</p>
+                        </div>
+                    </section>
             </div>
         </div>
     );

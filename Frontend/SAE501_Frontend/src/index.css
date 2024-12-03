@@ -1,4 +1,5 @@
+@import "@fontsource/nunito"; /* Default import */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "@fontsource/nunito"; /* Default import */
+
