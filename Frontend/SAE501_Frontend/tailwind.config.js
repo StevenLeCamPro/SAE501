@@ -6,7 +6,6 @@ export default {
   ],
   theme: {
     fontFamily:{
-      'title': ['"Roboto Slab"', 'serif'],
       'nunito': ['"Nunito"', 'sans-serif'],
     },
     extend: {},

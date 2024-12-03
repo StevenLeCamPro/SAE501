@@ -1,7 +1,8 @@
+import { NavLink } from "react-router-dom"
 function CGU() {
     return (
-        <div className="bg-orange-100">
-            <h1 className="text-center font-bold text-2xl py-4 lg:text-4xl">Conditions Générales d'Utilisation</h1>
+        <div className="bg-orange-100 pb-10">
+            <h1 className="text-center font-bold text-2xl py-10 lg:text-4xl">Conditions Générales d'Utilisation</h1>
 
             <div className="bg-white rounded-md mx-6 p-4 lg:p-10 lg:mx-48">
                 <section>
@@ -60,8 +61,15 @@ function CGU() {
                     <h2 className="mb-2 font-bold text-xl lg:text-3xl">14.Contact</h2>
                     <p className="px-4 text-justify font-nunito text-lg mb-2 lg:text-xl">Pour toute question concernant les présentes CGU, l'utilisateur peut contacter PharmInnov à l'adresse suivante : contact.pharminnov@gmail.com .</p>
                     <p className="px-4 text-justify font-nunito text-lg mb-2 lg:text-xl">   Les présentes CGU sont rédigées en français. En cas de contradiction entre les versions traduites et la version française, cette dernière prévaudra. </p>
-                    <p className="px-4 text-justify font-nunito text-lg lg:text-xl">  Les présentes CGU entrent en vigueur à la date de leur publication sur le Site.</p>
+                    <p className="px-4 text-justify font-nunito text-lg mb-6 lg:text-xl lg:mb-12">  Les présentes CGU entrent en vigueur à la date de leur publication sur le Site.</p>
                 </section>
+                <section>
+                        <div className="text-center">
+                            <p>Pour toute question concernant nos conditions générales d'utilisation, veuillez nous contacter à :</p>
+                            <p><NavLink to="mailto:contact@pharminnov.fr" className="text-emerald-600">contact@pharminnov.fr</NavLink></p>
+                            <p>17 Rue Jablinot, 77100 Meaux</p>
+                        </div>
+                    </section>
             </div>
         </div>
     )
