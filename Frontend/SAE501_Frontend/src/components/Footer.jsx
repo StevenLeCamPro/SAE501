@@ -1,4 +1,4 @@
-
+import { NavLink } from "react-router-dom"
 
 function Footer() {
 
@@ -8,9 +8,9 @@ function Footer() {
             <footer className="text-white text-center py-4">
                 <p>&copy; 2024 PharmInnov. Tous droits réservés.</p>
                 <div className="flex justify-center space-x-4 mt-2">
-                    <a href="#" className="hover:text-gray-300">CGU</a>
-                    <a href="#" className="hover:text-gray-300">CGV</a>
-                    <a href="#" className="hover:text-gray-300">RGPD</a>
+                    <NavLink to="/cgu" className="text-white">CGU</NavLink>
+                    <NavLink to="/cgv" className="text-white">CGV</NavLink>
+                    <NavLink to="/pdc" className="text-white">Politique de confidentialité</NavLink>
                 </div>
             </footer>
         </div>

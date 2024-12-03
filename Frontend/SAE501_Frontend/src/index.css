@@ -1,3 +1,5 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "@fontsource/roboto-slab"; /* Default import */
+@import "@fontsource/nunito"; /* Default import */

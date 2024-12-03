@@ -5,6 +5,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily:{
+      'title': ['"Roboto Slab"', 'serif'],
+      'nunito': ['"Nunito"', 'sans-serif'],
+    },
     extend: {},
   },
   plugins: [],

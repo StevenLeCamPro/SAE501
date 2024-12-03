@@ -8,6 +8,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import TestApiPost from './pages/TestApiPost.jsx'
 import TestApiGet from './pages/TestApiGet.jsx'
 import TestApiPut from './pages/TestApiPut.jsx'
+import CGU from './pages/CGU.jsx'
+import CGV from './pages/CGV.jsx'
+import PDC from './pages/PDC.jsx'
 
 const router = createBrowserRouter(
 [
@@ -30,6 +33,18 @@ const router = createBrowserRouter(
       {
         path: "/update",
         element: <TestApiPut/>
+      },
+      {
+        path: "/cgu",
+        element: <CGU/>
+      },
+      {
+        path: "/cgv",
+        element: <CGV/>
+      },
+      {
+        path: "/pdc",
+        element: <PDC/>
       }
     ]
   }
