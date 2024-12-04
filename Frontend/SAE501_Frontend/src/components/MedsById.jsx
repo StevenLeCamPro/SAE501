@@ -9,7 +9,7 @@ function MedsById() {
                 <div className="border-2 border-emerald-600 rounded-md bg-white shadow-lg p-4 xl:mx-48 xl:py-20 mb-8">
                     <div className="flex flex-col lg:flex-row lg:items-center">
                         <div className="lg:w-1/2 lg:flex lg:flex-col lg:items-right lg:pr-6">
-                            <div className="text-center lg:text-left mb-4 pl-20">
+                            <div className="text-center lg:text-left mb-4 lg:pl-20">
                                 <p className="font-bold text-lg xl:text-3xl">Doliprane 500mg</p>
                                 <p className="font-bold text-lg xl:text-3xl">Boîte de 16 gélules</p>
                             </div>
