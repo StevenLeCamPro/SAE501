@@ -11,6 +11,9 @@ import TestApiPut from './pages/TestApiPut.jsx'
 import CGU from './pages/CGU.jsx'
 import CGV from './pages/CGV.jsx'
 import PDC from './pages/PDC.jsx'
+import GetMeds from './components/GetMeds.jsx'
+import MedsById from './components/MedsById.jsx'
+
 
 const router = createBrowserRouter(
 [
@@ -45,6 +48,14 @@ const router = createBrowserRouter(
       {
         path: "/pdc",
         element: <PDC/>
+      },
+      {
+        path: "/medicaments",
+        element: <GetMeds/>
+      },
+      {
+        path: "/medsbyid",
+        element: <MedsById/>
       }
     ]
   }
