@@ -13,6 +13,7 @@ import CGV from './pages/CGV.jsx'
 import PDC from './pages/PDC.jsx'
 import GetMeds from './components/GetMeds.jsx'
 import MedsById from './components/MedsById.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 
 
 const router = createBrowserRouter(
@@ -56,6 +57,10 @@ const router = createBrowserRouter(
       {
         path: "/medsbyid",
         element: <MedsById/>
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard/>
       }
     ]
   }
