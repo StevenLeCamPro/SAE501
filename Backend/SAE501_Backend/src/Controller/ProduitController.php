@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Categorie;
 use App\Entity\Produit;
 use App\Entity\Image;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,12 +19,22 @@ class ProduitController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $produit = new Produit();
 
-        $produit->setNom($data['name']);
-        $produit->setDescription($data['content']);
+        $produit->setNom($data['nom']);
+        $produit->setDescription($data['description']);
+        $produit->setPrix($data['prix']);
 
-        $image = $em->getRepository(Image::class)->find($data['imageId']);
-        if ($image) {
-            $produit->setImage($image);
+        foreach ($data['categorie'] as $categorieId) {
+            $category = $em->getRepository(Categorie::class)->find($categorieId);
+            if ($category) {
+                $produit->getCategorie()->add($category);
+            }
+        }
+
+        if ($data['imageId']) {
+            $image = $em->getRepository(Image::class)->find($data['imageId']);
+            if ($image) {
+                $produit->setImage($image);
+            }
         }
 
         $em->persist($produit);
@@ -45,9 +56,10 @@ class ProduitController extends AbstractController
                 }
                 return [
                     'id' => $produit->getId(),
-                    'name' => $produit->getNom(),
-                    'content' => $produit->getDescription(),
-                    'image' => $path
+                    'nom' => $produit->getNom(),
+                    'description' => $produit->getDescription(),
+                    'image' => $path,
+                    'prix' => $produit->getPrix()
                 ];
             }, $produits);
             return $this->json($data, Response::HTTP_OK);
