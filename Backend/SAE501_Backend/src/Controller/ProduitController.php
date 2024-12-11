@@ -81,15 +81,17 @@ class ProduitController extends AbstractController
             } else {
                 $path = null;
             }
+
             $data = [
                 'id' => $produits->getId(),
-                'name' => $produits->getNom(),
-                'content' => $produits->getDescription(),
+                'nom' => $produits->getNom(),
+                'description' => $produits->getDescription(),
+                'image' => $path,
                 'imageId' => $imageId,
-                'image' => $path
+                'prix' => $produits->getPrix()
             ];
 
-            return $this->json($data, Response::HTTP_OK);
+            return $this->json([$data], Response::HTTP_OK);
         } else {
             return $this->json(['message' => 'Pas de produits trouvés'], Response::HTTP_OK);
         }
