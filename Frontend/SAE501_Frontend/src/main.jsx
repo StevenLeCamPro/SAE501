@@ -16,6 +16,7 @@ import MedsById from './components/MedsById.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import PostMedForm from './components/PostMedForm.jsx'
 import UpdateProduit from './components/PutMedForm.jsx'
+import MedList from './components/MedList.jsx'
 
 
 const router = createBrowserRouter(
@@ -71,6 +72,10 @@ const router = createBrowserRouter(
         {
           path: "/dashboard/updateMed",
           element: <UpdateProduit />
+        },
+        {
+          path: "/dashboard/medList",
+          element: <MedList />
         }
 
       ]
