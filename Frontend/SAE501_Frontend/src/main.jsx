@@ -14,62 +14,68 @@ import PDC from './pages/PDC.jsx'
 import GetMeds from './components/GetMeds.jsx'
 import MedsById from './components/MedsById.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import PostMedForm from './components/PostMedForm.jsx'
 
 
 const router = createBrowserRouter(
-[
-  {
-    path:"/",
-    element:<App/>,
-    children:[
-      {
-        path: "/",
-        element: <Accueil/>
-      },
-      {
-        path: "/register",
-        element: <TestApiPost/>
-      },
-      {
-        path: "/list",
-        element: <TestApiGet/>
-      },
-      {
-        path: "/update",
-        element: <TestApiPut/>
-      },
-      {
-        path: "/cgu",
-        element: <CGU/>
-      },
-      {
-        path: "/cgv",
-        element: <CGV/>
-      },
-      {
-        path: "/pdc",
-        element: <PDC/>
-      },
-      {
-        path: "/medicaments",
-        element: <GetMeds/>
-      },
-      {
-        path: "/medsbyid",
-        element: <MedsById/>
-      },
-      {
-        path: "/dashboard",
-        element: <Dashboard/>
-      }
-    ]
-  }
-]
+  [
+    {
+      path: "/",
+      element: <App />,
+      children: [
+        {
+          path: "/",
+          element: <Accueil />
+        },
+        {
+          path: "/register",
+          element: <TestApiPost />
+        },
+        {
+          path: "/list",
+          element: <TestApiGet />
+        },
+        {
+          path: "/update",
+          element: <TestApiPut />
+        },
+        {
+          path: "/cgu",
+          element: <CGU />
+        },
+        {
+          path: "/cgv",
+          element: <CGV />
+        },
+        {
+          path: "/pdc",
+          element: <PDC />
+        },
+        {
+          path: "/medicaments",
+          element: <GetMeds />
+        },
+        {
+          path: "/medsbyid",
+          element: <MedsById />
+        },
+        {
+          path: "/dashboard",
+          element: <Dashboard />
+        },
+        {
+          path: "/dashboard/createMed",
+          element: <PostMedForm />
+        }
+
+      ]
+    }
+  ]
 
 )
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   </StrictMode>,
 )

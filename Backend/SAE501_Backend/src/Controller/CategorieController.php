@@ -32,7 +32,7 @@ class CategorieController extends AbstractController
             $data = array_map(function ($category) {
                 return [
                     'id' => $category->getId(),
-                    'name' => $category->getName(),
+                    'nom' => $category->getNom(),
                 ];
             }, $categories);
             return $this->json($data, Response::HTTP_OK);
@@ -48,7 +48,7 @@ class CategorieController extends AbstractController
         if ($categories) {
             $data = [
                 'id' => $categories->getId(),
-                'name' => $categories->getNom(),
+                'nom' => $categories->getNom(),
             ];
             return $this->json([$data], Response::HTTP_OK);
         } else {
