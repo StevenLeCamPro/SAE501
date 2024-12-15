@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Api from "./Api";
 import { useNavigate } from "react-router-dom";
 
-function PostMedForm() {
-
+function UpdateProduit() {
+    const [id, setId] = useState();
     const [nom, setNom] = useState("");
     const [description, setDescription] = useState("");
     const [prix, setPrix] = useState(0);
@@ -12,6 +12,7 @@ function PostMedForm() {
     const [images, setImage] = useState("file");
     const [file, setFile] = useState(null);
     const [databaseImages, setDatabaseImages] = useState([]);
+    const [databaseProduit, setDatabaseProduit] = useState([])
 
     const navigate = useNavigate();
 
@@ -33,10 +34,34 @@ function PostMedForm() {
         }
     };
 
+    const fetchProduitList = async () => {
+        try {
+            const produit = await Api("produit", "get", null, null);
+            setDatabaseProduit(produit)
+        } catch (error) {
+            console.error("Error fetching product data:", error);
+        }
+    };
+
     useEffect(() => {
         fetchDatabaseCategories();
         fetchDatabaseImages();
+        fetchProduitList();
     }, []);
+
+    useEffect(() => {
+        databaseProduit.map((produit) => {
+            if (produit.id == id) {
+                setNom(produit.nom)
+                setDescription(produit.description)
+                setCategorie(produit.categorie[0])
+                setPrix(produit.prix)
+                if (produit.imageId) {
+                    setImage(produit.imageId)
+                }
+            }
+        })
+    }, [id])
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -52,18 +77,18 @@ function PostMedForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!nom.trim()) {
-            alert("Veuillez entrer le nom du produit");
-            return;
-        }
-        if (!description.trim()) {
-            alert("Veuillez entrer la description du produit");
-            return
-        }
-        if (!prix.trim()) {
-            alert("Veuillez entrer le prix du produit");
-            return
-        }
+        // if (!nom.trim()) {
+        //     alert("Veuillez entrer le nom du produit");
+        //     return;
+        // }
+        // if (!description.trim()) {
+        //     alert("Veuillez entrer la description du produit");
+        //     return
+        // }
+        // if (!prix.trim()) {
+        //     alert("Veuillez entrer le prix du produit");
+        //     return
+        // }
 
         let imageId = images;
 
@@ -94,13 +119,13 @@ function PostMedForm() {
                     console.log(dataMed)
 
                     try {
-                        const result = await Api("produit", "post", null, dataMed);
+                        const result = await Api("produit", "put", id, dataMed);
                         console.log("API Response:", result);
-                        alert("Le produit a bien été créé");
+                        alert("Le produit a bien été modifié");
                         fetchDatabaseImages();
                     } catch (error) {
-                        console.error("Erreur pendant la création du produit :", error);
-                        alert("Erreur pendant la création du produit");
+                        console.error("Erreur pendant la modification du produit :", error);
+                        alert("Erreur pendant la modification du produit");
                     }
                 } catch (error) {
                     console.error("Erreur durant l'upload de l'image :", error);
@@ -115,12 +140,12 @@ function PostMedForm() {
             console.log(data)
 
             try {
-                const result = await Api("produit", "post", null, data);
+                const result = await Api("produit", "put", id, data);
                 console.log("API Response:", result);
-                alert("Le produit a bien été créé");
+                alert("Le produit a bien été modifié");
             } catch (error) {
-                console.error("Erreur pendant la création du produit :", error);
-                alert("Erreur pendant la création du produit");
+                console.error("Erreur pendant la modification du produit :", error);
+                alert("Erreur pendant la modification du produit");
             }
         }
     };
@@ -133,8 +158,20 @@ function PostMedForm() {
                     <div class="relative mx-auto my-20 w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
                         <div class="w-full">
                             <div class="text-center">
-                                <h1 class="text-3xl font-semibold text-gray-900">Création de médicament</h1>
-                                <p class="mt-2 text-gray-500">Remplissez le formulaire ci-dessous pour créer un médicament</p>
+                                <h1 class="text-3xl font-semibold text-gray-900">Modification de médicament</h1>
+                                <p class="mt-2 text-gray-500">Remplissez le formulaire ci-dessous pour modifier un médicament</p>
+                            </div>
+                            <div>
+                                <form>
+                                    <select name="choixProduit" id="choixProduit" onChange={(e) => setId(e.target.value)}>
+                                        <option value=""></option>
+                                        {databaseProduit.map((produit) => {
+                                            return (
+                                                <option value={produit.id} key={produit.id}>{produit.nom}</option>
+                                            )
+                                        })}
+                                    </select>
+                                </form>
                             </div>
                             <div class="mt-5">
                                 <form onSubmit={handleSubmit} class="grid grid-cols-2 gap-6">
@@ -151,7 +188,7 @@ function PostMedForm() {
                                         <label for="description" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Description</label>
                                     </div>
                                     <div className="relative mt-6">
-                                        <select name="categorie" id="categorie" onChange={(e) => setCategorie([e.target.value])}>
+                                        <select name="categorie" id="categorie" value={categorie} onChange={(e) => setCategorie([e.target.value])}>
                                             <option value=""></option>
                                             {databaseCategories.map((categorie) => (
                                                 <option value={categorie.id} key={categorie.id}>{categorie.nom}</option>
@@ -159,7 +196,7 @@ function PostMedForm() {
                                         </select>
                                     </div>
                                     <div class="relative mt-6">
-                                        <select name="image" id="image" onChange={(e) => setImage(e.target.value)}>
+                                        <select name="image" id="image" value={images} onChange={(e) => setImage(e.target.value)}>
                                             <option value="file">Uploader une image</option>
                                             {databaseImages.map((image) => (
                                                 <option value={image.id} key={image.id}>{image.path}</option>
@@ -180,4 +217,4 @@ function PostMedForm() {
     )
 }
 
-export default PostMedForm
+export default UpdateProduit;

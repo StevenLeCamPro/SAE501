@@ -50,8 +50,10 @@ class ProduitController extends AbstractController
             $data = array_map(function ($produit) {
                 if ($produit->getImage()) {
                     $image = $produit->getImage();
+                    $imageId = $image->getId();
                     $path = $image->getPath();
                 } else {
+                    $imageId = null;
                     $path = null;
                 }
                 return [
@@ -59,7 +61,9 @@ class ProduitController extends AbstractController
                     'nom' => $produit->getNom(),
                     'description' => $produit->getDescription(),
                     'image' => $path,
-                    'prix' => $produit->getPrix()
+                    'imageId' => $imageId,
+                    'prix' => $produit->getPrix(),
+                    'categorie' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray()
                 ];
             }, $produits);
             return $this->json($data, Response::HTTP_OK);
@@ -79,6 +83,7 @@ class ProduitController extends AbstractController
                 $imageId = $image->getId();
                 $path = $image->getPath();
             } else {
+                $imageId = null;
                 $path = null;
             }
 
@@ -88,7 +93,8 @@ class ProduitController extends AbstractController
                 'description' => $produits->getDescription(),
                 'image' => $path,
                 'imageId' => $imageId,
-                'prix' => $produits->getPrix()
+                'prix' => $produits->getPrix(),
+                'categorie' => $produits->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray()
             ];
 
             return $this->json([$data], Response::HTTP_OK);
@@ -105,25 +111,32 @@ class ProduitController extends AbstractController
         if ($produit) {
             $data = json_decode($request->getContent(), true);
 
-            if (isset($data['name'])) {
-                $produit->setNom($data['name']);
+            if (isset($data['nom'])) {
+                $produit->setNom($data['nom']);
             } else {
-                return $this->json(['message' => 'Le champ "name" est requis'], Response::HTTP_BAD_REQUEST);
+                return $this->json(['message' => 'Le champ "nom" est requis'], Response::HTTP_BAD_REQUEST);
             }
 
-            if (isset($data['content'])) {
-                $produit->setDescription($data['content']);
+            if (isset($data['description'])) {
+                $produit->setDescription($data['description']);
             } else {
-                return $this->json(['message' => 'Le champ "content" est requis'], Response::HTTP_BAD_REQUEST);
+                return $this->json(['message' => 'Le champ "description" est requis'], Response::HTTP_BAD_REQUEST);
             }
+            
+            $produit->setPrix($data['prix']);
 
-            if (isset($data['image'])) {
-                $image = $em->getRepository(Image::class)->find($data['image']);
+            foreach ($data['categorie'] as $categorieId) {
+                $category = $em->getRepository(Categorie::class)->find($categorieId);
+                if ($category) {
+                    $produit->getCategorie()->add($category);
+                }
+            }
+    
+            if ($data['imageId']) {
+                $image = $em->getRepository(Image::class)->find($data['imageId']);
                 if ($image) {
                     $produit->setImage($image);
                 }
-            } else {
-                return $this->json(['message' => 'Le champ "image" est requis'], Response::HTTP_BAD_REQUEST);
             }
 
             $em->persist($produit);
