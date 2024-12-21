@@ -17,6 +17,7 @@ import Dashboard from './pages/Dashboard.jsx'
 import PostMedForm from './components/PostMedForm.jsx'
 import UpdateProduit from './components/PutMedForm.jsx'
 import MedList from './components/MedList.jsx'
+import Login from './components/Login.jsx'
 
 
 const router = createBrowserRouter(
@@ -32,6 +33,10 @@ const router = createBrowserRouter(
         {
           path: "/register",
           element: <TestApiPost />
+        },
+        {
+          path: "/login",
+          element: <Login />
         },
         {
           path: "/list",

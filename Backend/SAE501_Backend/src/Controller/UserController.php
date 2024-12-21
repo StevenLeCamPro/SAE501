@@ -129,7 +129,7 @@ class UserController extends AbstractController
         $user->setCreatedAt($currentDateTime);
         $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
         $user->setPassword($hashedPassword);
-        $user->setRoles(['ROLES_USER']);
+        $user->setRoles(1);
 
         $em->persist($user);
         $em->flush();
