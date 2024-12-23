@@ -1,19 +1,24 @@
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
-function GetCookieInfo() {
-    const getAuthData = () => {
-        const cookie = Cookies.get('auth_data');
-        return cookie ? JSON.parse(cookie) : null;
-    };
+function useCheckRole(requiredRole) {
 
-    const authData = getAuthData();
-    if (authData) {
-        console.log('User ID:', authData.user_id);
-        console.log('Role:', authData.role);
-        console.log('Token:', authData.token);
+    const authData = Cookies.get('pharminnov_login');
+    if (!authData) {
+        console.log('not connected')
+        alert('Vous n\'êtes pas connecté.')
+        return 0;
     }
 
-    return authData
+    const { user_id, role } = JSON.parse(authData);
+
+    if (!user_id || role < requiredRole) {
+        console.log('not the good role')
+        alert('Vous ne pouvez pas vour rendre sur cette page.')
+        return 1;
+    }
+
+    console.log('all good')
+    return 2;
 }
 
-export default GetCookieInfo
+export default useCheckRole;

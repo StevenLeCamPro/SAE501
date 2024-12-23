@@ -63,4 +63,38 @@ class AuthController extends AbstractController
             'token' => $token,
         ]);
     }
+
+    #[Route('/token/post', name: 'tokenValidator', methods: ['POST'])]
+    public function tokenValidator(Request $request, EntityManagerInterface $em): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['auth_data'])) {
+            return $this->json(['error' => 'Invalid request data'], 400);
+        }
+
+        $cookieData = $data['auth_data'];
+
+        $tokenId = $cookieData['token'] ?? null;
+        $userId = $cookieData['user_id'] ?? null;
+        $role = $cookieData['role'] ?? null;
+        $date = $cookieData['date'] ?? null;
+
+        if (!$tokenId || !$userId || !$role || !$date) {
+            return $this->json(['error' => 'Incomplete authentication data'], 400);
+        }
+
+        $token = $em->getRepository(UserToken::class)->findOneBy([
+            'token' => $tokenId,
+            'User' => $userId,
+            'createdAt' => new \DateTimeImmutable($date),
+        ]);
+
+        if (!$token || $token->getUser()->getRoles() !== $role) {
+            return $this->json(['error' => 'Permission Denied'], 401);
+        }
+
+        return $this->json(['success' => 'Token is valid']);
+    }
+
 }

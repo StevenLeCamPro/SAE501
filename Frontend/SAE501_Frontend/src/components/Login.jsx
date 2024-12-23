@@ -21,12 +21,12 @@ function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                Cookies.set('auth_data', JSON.stringify({
+                Cookies.set('pharminnov_login', JSON.stringify({
                     user_id: data.user_id,
                     role: data.role,
                     date: data.date,
                     token: data.token,
-                }), { secure: true, sameSite: 'strict' });
+                }), { secure: true, sameSite: 'strict', expires: 1 });
 
                 console.log('Login successful!');
                 GetCookieInfo()
