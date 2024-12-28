@@ -22,6 +22,8 @@ class ProduitController extends AbstractController
         $produit->setNom($data['nom']);
         $produit->setDescription($data['description']);
         $produit->setPrix($data['prix']);
+        $produit->setDosage($data['dosage']);
+        $produit->setStock($data['stock']);
 
         foreach ($data['categorie'] as $categorieId) {
             $category = $em->getRepository(Categorie::class)->find($categorieId);
@@ -63,6 +65,8 @@ class ProduitController extends AbstractController
                     'image' => $path,
                     'imageId' => $imageId,
                     'prix' => $produit->getPrix(),
+                    'dosage' => $produit->getDosage(),
+                    'stock' => $produit->getStock(),
                     'categorie' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray()
                 ];
             }, $produits);
@@ -94,6 +98,8 @@ class ProduitController extends AbstractController
                 'image' => $path,
                 'imageId' => $imageId,
                 'prix' => $produits->getPrix(),
+                'dosage' => $produits->getDosage(),
+                'stock' => $produits->getStock(),
                 'categorie' => $produits->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray()
             ];
 
@@ -125,12 +131,30 @@ class ProduitController extends AbstractController
             
             $produit->setPrix($data['prix']);
 
-            foreach ($data['categorie'] as $categorieId) {
-                $category = $em->getRepository(Categorie::class)->find($categorieId);
-                if ($category) {
-                    $produit->getCategorie()->add($category);
+            if (isset($data['dosage'])) {
+                $produit->setDosage($data['dosage']);
+            } else {
+                return $this->json(['message' => 'Le champ "dosage" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+            if (isset($data['stock'])) {
+                $produit->setStock($data['stock']);
+            } else {
+                return $this->json(['message' => 'Le champ "stock" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+            
+
+            if (isset($data['categorie'])) {
+                $categories = is_array($data['categorie']) ? $data['categorie'] : [$data['categorie']];
+            
+                foreach ($categories as $categorieId) {
+                    $category = $em->getRepository(Categorie::class)->find($categorieId);
+                    if ($category && !$produit->getCategorie()->contains($category)) {
+                        $produit->getCategorie()->add($category);
+                    }
                 }
             }
+            
+            
     
             if ($data['imageId']) {
                 $image = $em->getRepository(Image::class)->find($data['imageId']);

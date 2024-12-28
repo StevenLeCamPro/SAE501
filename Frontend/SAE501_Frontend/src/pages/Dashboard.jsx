@@ -11,7 +11,7 @@ function Dashboard() {
                     <button className="bg-emerald-600 py-10 font-nunito text-white rounded-lg text-xl xl:text-3xl m-2 xl:m-10"><NavLink to="/dashboard/createMed">Gestion des médicaments</NavLink></button>
                     <button className="bg-emerald-600 py-10 font-nunito text-white rounded-lg text-xl xl:text-3xl m-2 xl:m-10"><NavLink to="">Gestion des commandes</NavLink></button>
                     <button className="bg-emerald-600 py-10 font-nunito text-white rounded-lg text-xl xl:text-3xl m-2 xl:m-10"><NavLink to="">Gestion des stocks</NavLink></button>
-                    <button className="bg-emerald-600 py-10 font-nunito text-white rounded-lg text-xl xl:text-3xl m-2 xl:m-10"><NavLink to="">Gestion des utilisateurs</NavLink></button>
+                    <button className="bg-emerald-600 py-10 font-nunito text-white rounded-lg text-xl xl:text-3xl m-2 xl:m-10"><NavLink to="/listUser">Gestion des utilisateurs</NavLink></button>
                   </div>
                 </div>
             </div>

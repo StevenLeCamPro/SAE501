@@ -39,7 +39,7 @@ const router = createBrowserRouter(
           element: <Login />
         },
         {
-          path: "/list",
+          path: "/listUser",
           element: <TestApiGet />
         },
         {

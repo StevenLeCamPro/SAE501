@@ -14,6 +14,8 @@ function PostMedForm() {
     const [databaseCategories, setDatabaseCategories] = useState([])
     const [images, setImage] = useState("file");
     const [file, setFile] = useState(null);
+    const [stock, setStock] = useState(0);
+    const [dosage, setDosage] = useState("");
     const [databaseImages, setDatabaseImages] = useState([]);
 
     const navigate = useNavigate();
@@ -92,7 +94,7 @@ function PostMedForm() {
                     const lastImage = databaseImages.slice(-1)[0];
                     imageId = lastImage ? lastImage.id : null;
 
-                    const dataMed = { nom, description, prix, categorie, imageId };
+                    const dataMed = { nom, description, prix, categorie, imageId, stock, dosage };
 
                     console.log(dataMed)
 
@@ -113,7 +115,7 @@ function PostMedForm() {
 
             reader.readAsDataURL(file);
         } else {
-            const data = { nom, description, prix, categorie, imageId };
+            const data = { nom, description, prix, categorie, imageId, stock, dosage };
 
             console.log(data)
 
@@ -168,6 +170,14 @@ function PostMedForm() {
                                                 <option value={image.id} key={image.id}>{image.path}</option>
                                             ))}
                                         </select>
+                                    </div>
+                                    <div className="relative mt-6">
+                                        <input type="number" name="stock" value={stock} onChange={(e) => setStock(e.target.value)} placeholder="Stock" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                        <label htmlFor="stock" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Stock</label>
+                                    </div>
+                                    <div className="relative mt-6">
+                                        <input type="text" name="dosage" value={dosage} onChange={(e) => setDosage(e.target.value)} placeholder="Dosage" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                        <label htmlFor="dosage" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Dosage</label>
                                     </div>
                                     {fileInput()}
                                     <div className="col-span-2 my-6 text-center">

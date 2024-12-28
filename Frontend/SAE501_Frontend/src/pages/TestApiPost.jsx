@@ -118,7 +118,11 @@ function TestApiPost() {
                             </div>
                             <div class="col-span-2 my-6 text-center">
                                 <button type="submit" class="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white ">Créer un compte</button>
+                                <p className="text-center text-sm text-gray-500">
+                                    Déjà un compte ? <a href="/login" className="text-emerald-600 hover:underline">Se connecter</a>
+                                </p>                            
                             </div>
+                            
                         </form>
                     </div>
                 </div>

@@ -34,6 +34,12 @@ class Produit
     #[ORM\ManyToOne(inversedBy: 'produits')]
     private ?Image $Image = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $dosage = null;
+
+    #[ORM\Column]
+    private ?int $stock = null;
+
     public function __construct()
     {
         $this->Categorie = new ArrayCollection();
@@ -112,6 +118,30 @@ class Produit
     public function setImage(?Image $Image): static
     {
         $this->Image = $Image;
+
+        return $this;
+    }
+
+    public function getDosage(): ?string
+    {
+        return $this->dosage;
+    }
+
+    public function setDosage(string $dosage): static
+    {
+        $this->dosage = $dosage;
+
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): static
+    {
+        $this->stock = $stock;
 
         return $this;
     }

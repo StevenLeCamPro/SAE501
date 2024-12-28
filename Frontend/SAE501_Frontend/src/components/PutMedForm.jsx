@@ -10,6 +10,8 @@ function UpdateProduit() {
     const [categorie, setCategorie] = useState([]);
     const [databaseCategories, setDatabaseCategories] = useState([])
     const [images, setImage] = useState("file");
+    const [dosage, setDosage] = useState("");
+    const [stock, setStock] = useState(0);
     const [file, setFile] = useState(null);
     const [databaseImages, setDatabaseImages] = useState([]);
     const [databaseProduit, setDatabaseProduit] = useState([])
@@ -56,6 +58,8 @@ function UpdateProduit() {
                 setDescription(produit.description)
                 setCategorie(produit.categorie[0])
                 setPrix(produit.prix)
+                setDosage(produit.dosage)
+                setStock(produit.stock)
                 if (produit.imageId) {
                     setImage(produit.imageId)
                 }
@@ -114,7 +118,7 @@ function UpdateProduit() {
                     const lastImage = databaseImages.slice(-1)[0];
                     imageId = lastImage ? lastImage.id : null;
 
-                    const dataMed = { nom, description, prix, categorie, imageId };
+                    const dataMed = { nom, description, prix, categorie, imageId, dosage, stock };
 
                     console.log(dataMed)
 
@@ -135,7 +139,7 @@ function UpdateProduit() {
 
             reader.readAsDataURL(file);
         } else {
-            const data = { nom, description, prix, categorie, imageId };
+            const data = { nom, description, prix, categorie, imageId, dosage, stock };
 
             console.log(data)
 
@@ -152,19 +156,19 @@ function UpdateProduit() {
 
     return (
         <>
-            <div className="bg-orange-100">
-                <div className="bg-cover bg-center h-54 lg:py-14 relative" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
+            <div className="bg-orange-100 min-h-screen flex items-center justify-center">
+                <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                     <div className="absolute inset-0 bg-black opacity-65"></div>
-                    <div class="relative mx-auto my-20 w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
-                        <div class="w-full">
-                            <div class="text-center">
-                                <h1 class="text-3xl font-semibold text-gray-900">Modification de médicament</h1>
-                                <p class="mt-2 text-gray-500">Remplissez le formulaire ci-dessous pour modifier un médicament</p>
+                    <div className="relative mx-auto my-20 w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
+                        <div className="w-full">
+                            <div className="text-center">
+                                <h1 className="text-3xl font-semibold text-gray-900">Modification de médicament</h1>
+                                <p className="mt-2 text-gray-500">Remplissez le formulaire ci-dessous pour modifier un médicament</p>
                             </div>
                             <div>
                                 <form>
-                                    <select name="choixProduit" id="choixProduit" onChange={(e) => setId(e.target.value)}>
-                                        <option value=""></option>
+                                    <select name="choixProduit" id="choixProduit" onChange={(e) => setId(e.target.value)} className="mt-4 w-full border border-gray-300 rounded-md p-2">
+                                        <option value="">Choisissez le produit à modifier</option>
                                         {databaseProduit.map((produit) => {
                                             return (
                                                 <option value={produit.id} key={produit.id}>{produit.nom}</option>
@@ -173,39 +177,47 @@ function UpdateProduit() {
                                     </select>
                                 </form>
                             </div>
-                            <div class="mt-5">
-                                <form onSubmit={handleSubmit} class="grid grid-cols-2 gap-6">
-                                    <div class="relative mt-6">
-                                        <input type="text" name="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                        <label for="nom" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Nom</label>
-                                    </div>
-                                    <div class="relative mt-6">
-                                        <input type="number" name="prix" value={prix} onChange={(e) => setPrix(e.target.value)} placeholder="Prix" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                        <label for="prix" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Prix</label>
-                                    </div>
-                                    <div class="relative mt-6">
-                                        <input type="text" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description du médicament" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                        <label for="description" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Description</label>
+                            <div className="mt-5">
+                                <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+                                    <div className="relative mt-6">
+                                        <input type="text" name="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none" />
+                                        <label htmlFor="nom" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Nom</label>
                                     </div>
                                     <div className="relative mt-6">
-                                        <select name="categorie" id="categorie" value={categorie} onChange={(e) => setCategorie([e.target.value])}>
-                                            <option value=""></option>
+                                        <input type="number" name="prix" value={prix} onChange={(e) => setPrix(e.target.value)} placeholder="Prix" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none" />
+                                        <label htmlFor="prix" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Prix</label>
+                                    </div>
+                                    <div className="relative mt-6">
+                                        <input type="text" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description du médicament" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none" />
+                                        <label htmlFor="description" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Description</label>
+                                    </div>
+                                    <div className="relative mt-6">
+                                        <select name="categorie" id="categorie" value={categorie} onChange={(e) => setCategorie([e.target.value])} className="w-full border border-gray-300 rounded-md p-2">
+                                            <option value="">Séléctionnez une catégorie</option>
                                             {databaseCategories.map((categorie) => (
                                                 <option value={categorie.id} key={categorie.id}>{categorie.nom}</option>
                                             ))}
                                         </select>
                                     </div>
-                                    <div class="relative mt-6">
-                                        <select name="image" id="image" value={images} onChange={(e) => setImage(e.target.value)}>
+                                    <div className="relative mt-6 w-full">
+                                        <select name="image" id="image" value={images} onChange={(e) => setImage(e.target.value)} className="w-full border border-gray-300 rounded-md p-2">
                                             <option value="file">Uploader une image</option>
                                             {databaseImages.map((image) => (
                                                 <option value={image.id} key={image.id}>{image.path}</option>
                                             ))}
                                         </select>
                                     </div>
+                                    <div className="relative mt-6">
+                                        <input type="number" name="stock" value={stock} onChange={(e) => setStock(e.target.value)} placeholder="Stock" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none" />
+                                        <label htmlFor="stock" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Stock</label>
+                                    </div>
+                                    <div className="relative mt-6">
+                                        <input type="text" name="dosage" value={dosage} onChange={(e) => setDosage(e.target.value)} placeholder="Dosage" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none" />
+                                        <label htmlFor="dosage" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Dosage</label>
+                                    </div>
                                     {fileInput()}
-                                    <div class="col-span-2 my-6 text-center">
-                                        <button type="submit" class="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white ">Créer un médicament</button>
+                                    <div className="col-span-2 my-6 text-center">
+                                        <button type="submit" className="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white">Modifier le médicament</button>
                                     </div>
                                 </form>
                             </div>
