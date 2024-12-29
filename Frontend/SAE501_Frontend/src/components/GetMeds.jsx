@@ -50,7 +50,7 @@ function GetMeds() {
     };
 
     const filteredProduits = selectedCategorie
-        ? produits.filter(produit => produit.categorie === selectedCategorie)
+        ? produits.filter(produit => produit.categorie == selectedCategorie)
         : produits;
 
     return (
