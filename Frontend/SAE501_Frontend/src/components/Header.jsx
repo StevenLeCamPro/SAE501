@@ -14,14 +14,23 @@ function Header() {
 
     const loginNav = () => {
         if (Cookies.get('pharminnov_login')) {
-            return <NavLink to="/" className="text-white" onClick={logout}>Se déconnecter</NavLink>
+            return (
+                <>
+                    <NavLink to="/" className="text-white" onClick={logout}>Se déconnecter</NavLink>
+                    <NavLink to="/dashboard" className="text-white">Tableau de bord</NavLink>
+                </>
+            );
         }
-        return <NavLink to="/login" className="text-white">Se connecter</NavLink>
+        return <NavLink to="/login" className="text-white">Se connecter</NavLink>;
     }
 
     const loginNavPhone = () => {
         if (Cookies.get('pharminnov_login')) {
-            return <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded" onClick={logout}>Se déconnecter</NavLink>
+            return (<>
+            <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded" onClick={logout}>Se déconnecter</NavLink>
+            <NavLink to="/dashboard" className="block text-white bg-emerald-800 px-4 py-2 rounded">Tableau de bord</NavLink>
+
+            </>)
         }
         return <NavLink to="/login" className="block text-white bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink>
     }
@@ -41,7 +50,7 @@ function Header() {
                     <NavLink to="/" className="text-white">Visite Virtuelle</NavLink>
                     {/* <NavLink to="/login" className="text-white">Se connecter</NavLink> */}
                     {loginNav()}
-                    <NavLink to="/dashboard" className="text-white">Tableau de Bord</NavLink>
+                    
                 </div>
             </div>
 
@@ -69,7 +78,6 @@ function Header() {
                         <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded">Visite Virtuelle</NavLink>
                         {/* <NavLink to="/login" className="block text-white bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink> */}
                         {loginNavPhone()}
-                        <NavLink to="/dashboard" className="block text-white bg-emerald-800 px-4 py-2 rounded">Tableau de Bord</NavLink>
                     </div>
                 )}
             </div>

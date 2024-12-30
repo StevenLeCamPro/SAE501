@@ -25,6 +25,12 @@ class UserController extends AbstractController
                 return [
                     'id' => $category->getId(),
                     'name' => $category->getName(),
+                    'firstName' => $category->getFirstName(),
+                    'email' => $category->getEmail(),
+                    'birthDate' => $category->getBirthDate(),
+                    'phone'=> $category->getPhone(),
+                    'address'=> $category->getAddress(),
+
                 ];
             }, $users);
             return $this->json($data, Response::HTTP_OK);

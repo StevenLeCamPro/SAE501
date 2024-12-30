@@ -18,12 +18,21 @@ function DashboardMed () {
 
     return(
         <>
-            <select name="select" id="select" onChange={(e) => {setSelect(e.target.value)}}>
+        <div className="bg-orange-100 pt-4 text-center">
+            <select 
+                name="select" 
+                id="select" 
+                onChange={(e) => {setSelect(e.target.value)}}
+                className="font-bold text-xl md:text-2xl lg:text-xl xl:text-lg p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
                 <option value="list">Liste des médicaments</option>
                 <option value="post">Créer un médicament</option>
                 <option value="put">Modifier un médicament</option>
             </select>
-            {optionSelected()}
+            <div className="mt-4">
+                {optionSelected()}
+            </div>
+            </div>
         </>
     )
 }

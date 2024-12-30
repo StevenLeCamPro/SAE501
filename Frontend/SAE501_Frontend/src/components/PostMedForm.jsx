@@ -132,17 +132,17 @@ function PostMedForm() {
 
     return (
         <>
-            <div className="bg-orange-100 min-h-screen flex items-center justify-center">
+            <div className="bg-orange-100  flex items-center justify-center">
                 <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                     <div className="absolute inset-0 bg-black opacity-65"></div>
-                    <div className="relative mx-auto my-20 w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
+                    <div className="relative mx-auto my-20 w-5/6 lg:w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10">
                         <div className="w-full">
                             <div className="text-center">
                                 <h1 className="text-3xl font-semibold text-gray-900">Création de médicament</h1>
                                 <p className="mt-2 text-gray-500">Remplissez le formulaire ci-dessous pour créer un médicament</p>
                             </div>
                             <div className="mt-5">
-                                <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+                                <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <div className="relative mt-6">
                                         <input type="text" name="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
                                         <label htmlFor="nom" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Nom</label>
@@ -151,7 +151,7 @@ function PostMedForm() {
                                         <input type="number" name="prix" value={prix} onChange={(e) => setPrix(e.target.value)} placeholder="Prix" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
                                         <label htmlFor="prix" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Prix</label>
                                     </div>
-                                    <div className="relative mt-6 col-span-2">
+                                    <div className="relative mt-6 col-span-1 sm:col-span-2">
                                         <input type="text" name="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description du médicament" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
                                         <label htmlFor="description" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Description</label>
                                     </div>
@@ -180,8 +180,8 @@ function PostMedForm() {
                                         <label htmlFor="dosage" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Dosage</label>
                                     </div>
                                     {fileInput()}
-                                    <div className="col-span-2 my-6 text-center">
-                                        <button type="submit" className="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white hover:bg-emerald-700">Créer un médicament</button>
+                                    <div className="col-span-1 sm:col-span-2 my-6 text-center">
+                                        <button type="submit" className="w-full sm:w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white hover:bg-emerald-700">Créer un médicament</button>
                                     </div>
                                 </form>
                             </div>

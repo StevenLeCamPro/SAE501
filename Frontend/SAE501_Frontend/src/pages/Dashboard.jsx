@@ -1,6 +1,24 @@
 import { NavLink } from "react-router-dom"
+import roleValidator from "../components/CookieValidator";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAccess = async () => {
+        const access = await roleValidator(1);
+        console.log(access);
+
+        if (!access) {
+            navigate('/login');
+            return;
+        }
+
+    };
+    checkAccess();
+}, []);
     return (
         <div className="bg-orange-100 pb-10">
             <h1 className="text-center font-bold text-2xl py-10 xl:text-4xl">Tableau de Bord</h1>

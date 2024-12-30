@@ -48,10 +48,10 @@ function Login() {
     };
 
     return (
-        <div className="bg-orange-100 min-h-screen flex items-center justify-center">
+        <div className="bg-orange-100 flex items-center justify-center">
             <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                 <div className="absolute inset-0 bg-black opacity-65"></div>
-                <div className="relative mx-auto my-20 w-full max-w-sm bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
+                <div className="relative mx-auto my-20 w-full max-w-sm bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10">
                     <div className="text-center">
                         <h1 className="text-3xl font-semibold text-gray-900">Connexion</h1>
                         <p className="mt-2 text-gray-500">Entrez vos informations pour accéder à votre compte</p>

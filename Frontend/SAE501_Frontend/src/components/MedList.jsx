@@ -19,11 +19,9 @@ function MedList() {
   }, []);
 
   return (
-    <div className="bg-white pb-10">
-      <h1 className="text-2xl font-bold text-center mt-6">
-        Liste des médicaments
-      </h1>
-      <div class="p-6 overflow-scroll xl:overflow-hidden px-0">
+    <div className="bg-orange-100 pb-10">
+      
+      <div class="pb-6 overflow-scroll xl:overflow-hidden px-0">
         <table class="mt-4 w-full min-w-max table-auto text-left">
           <thead>
             <tr class="text-sm leading-normal">

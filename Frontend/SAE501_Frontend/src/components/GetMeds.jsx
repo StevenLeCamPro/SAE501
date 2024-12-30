@@ -70,7 +70,7 @@ function GetMeds() {
                     return (
                         <div className="border-2 border-emerald-600 rounded-md bg-white shadow-lg p-4 mb-8" key={index}>
                             <div className="flex justify-center">
-                                <img src={imagePath} alt={produit.image} className="w-full h-auto xl:h-5/6 xl:w-5/6" />
+                                <img src={imagePath} alt={produit.image} className="w-full h-auto xl:h-5/6 xl:w-5/6 rounded-lg" />
                             </div>
                             <div className="flex justify-between items-center xl:mb-4 px-4">
                                 <div>
