@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MedList from "../components/MedList";
 import PostMedForm from "../components/PostMedForm";
+import UpdateProduit from "../components/PutMedForm";
 
 function DashboardMed () {
     const [select, setSelect] = useState("list")
@@ -8,6 +9,8 @@ function DashboardMed () {
     const optionSelected = () => {
         if(select === "post") {
             return <PostMedForm />
+        } else if (select === "put") {
+            return <UpdateProduit />
         } else {
             return <MedList />
         }
@@ -18,6 +21,7 @@ function DashboardMed () {
             <select name="select" id="select" onChange={(e) => {setSelect(e.target.value)}}>
                 <option value="list">Liste des médicaments</option>
                 <option value="post">Créer un médicament</option>
+                <option value="put">Modifier un médicament</option>
             </select>
             {optionSelected()}
         </>

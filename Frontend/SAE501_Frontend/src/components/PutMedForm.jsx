@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import Api from "./Api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function UpdateProduit() {
-    const [id, setId] = useState();
+
+    const [searchParams] = useSearchParams();
+    const medid = searchParams.get("id");
+
+    const [id, setId] = useState(medid ?? null);
     const [nom, setNom] = useState("");
     const [description, setDescription] = useState("");
     const [prix, setPrix] = useState(0);
@@ -45,27 +49,36 @@ function UpdateProduit() {
         }
     };
 
+    const setMedData = () => {
+        const produit = databaseProduit.find((produit) => produit.id == id);
+        if (produit) {
+            setNom(produit.nom);
+            setDescription(produit.description);
+            setCategorie(produit.categorie[0]);
+            setPrix(produit.prix);
+            setDosage(produit.dosage);
+            setStock(produit.stock);
+            if (produit.imageId) {
+                setImage(produit.imageId);
+            }
+        }
+    };
+
     useEffect(() => {
-        fetchDatabaseCategories();
-        fetchDatabaseImages();
-        fetchProduitList();
+        const initializeData = async () => {
+            await fetchDatabaseCategories();
+            await fetchDatabaseImages();
+            await fetchProduitList();
+        };
+    
+        initializeData();
     }, []);
 
     useEffect(() => {
-        databaseProduit.map((produit) => {
-            if (produit.id == id) {
-                setNom(produit.nom)
-                setDescription(produit.description)
-                setCategorie(produit.categorie[0])
-                setPrix(produit.prix)
-                setDosage(produit.dosage)
-                setStock(produit.stock)
-                if (produit.imageId) {
-                    setImage(produit.imageId)
-                }
-            }
-        })
-    }, [id])
+        if (databaseProduit.length > 0 && id) {
+            setMedData();
+        }
+    }, [id, databaseProduit]);
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -167,7 +180,7 @@ function UpdateProduit() {
                             </div>
                             <div>
                                 <form>
-                                    <select name="choixProduit" id="choixProduit" onChange={(e) => setId(e.target.value)} className="mt-4 w-full border border-gray-300 rounded-md p-2">
+                                    <select name="choixProduit" id="choixProduit" value={id} onChange={(e) => setId(e.target.value)} className="mt-4 w-full border border-gray-300 rounded-md p-2">
                                         <option value="">Choisissez le produit à modifier</option>
                                         {databaseProduit.map((produit) => {
                                             return (
