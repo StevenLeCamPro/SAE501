@@ -40,6 +40,9 @@ class Produit
     #[ORM\Column]
     private ?int $stock = null;
 
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    private ?Commande $commande = null;
+
     public function __construct()
     {
         $this->Categorie = new ArrayCollection();
@@ -142,6 +145,18 @@ class Produit
     public function setStock(int $stock): static
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getCommande(): ?Commande
+    {
+        return $this->commande;
+    }
+
+    public function setCommande(?Commande $commande): static
+    {
+        $this->commande = $commande;
 
         return $this;
     }

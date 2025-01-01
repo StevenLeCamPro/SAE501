@@ -19,7 +19,8 @@ import UpdateProduit from './components/PutMedForm.jsx'
 import MedList from './components/MedList.jsx'
 import Login from './components/Login.jsx'
 import DashboardMed from './pages/DashboardMed.jsx'
-
+import CommandeUpload from './components/CommandeUpload.jsx'
+import CommandeGet from './components/CommandeGet.jsx'
 
 const router = createBrowserRouter(
   [
@@ -86,6 +87,14 @@ const router = createBrowserRouter(
         {
           path: "/dashboard/med",
           element: <DashboardMed />
+        },
+        {
+          path: "/commande/create",
+          element: <CommandeUpload />
+        },
+        {
+          path: "/commande/liste",
+          element: <CommandeGet />
         }
 
       ]
