@@ -21,6 +21,7 @@ import Login from './components/Login.jsx'
 import DashboardMed from './pages/DashboardMed.jsx'
 import CommandeUpload from './components/CommandeUpload.jsx'
 import CommandeGet from './components/CommandeGet.jsx'
+import PostMedPdf from './components/PostMedPdf.jsx'
 
 const router = createBrowserRouter(
   [
@@ -75,6 +76,10 @@ const router = createBrowserRouter(
         {
           path: "/dashboard/createMed",
           element: <PostMedForm />
+        },
+        {
+          path: "/dashboard/fournisseur",
+          element: <PostMedPdf />
         },
         {
           path: "/dashboard/updateMed",

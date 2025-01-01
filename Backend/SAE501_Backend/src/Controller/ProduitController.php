@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ProduitController extends AbstractController
@@ -42,6 +43,70 @@ class ProduitController extends AbstractController
         $em->persist($produit);
         $em->flush();
         return $this->json(['message' => 'Produit créé avec succès'], Response::HTTP_CREATED);
+    }
+    #[Route('/produit/pdf/post', name: 'create_produit_pdf', methods: ['POST'])]
+    public function processOrdonnance(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $text = $data['text'] ?? '';
+
+        // Exemple simple : Extraction basée sur des mots-clés
+        $lines = explode("\n", $text);
+        $medicaments = [];
+        $erreurs = [];
+
+        // Convertir chaque ligne en UTF-8
+        foreach ($lines as &$line) {
+            $line = mb_convert_encoding($line, 'UTF-8', 'auto');
+        }
+
+        foreach ($lines as $line) {
+            if (preg_match('/^([\p{L}\p{M}\'\s\-]+)\s+\(([\d\.]+(?:mg|g|ml|mI|mL|Ul|µg))\):\s+(.*)\s+\[Stock:\s*(\d+)\]\s+\[Prix:\s*([\d\.]+)\]$/iu', $line, $matches)) {
+                $nom = trim($matches[1]);
+                $dosage = trim($matches[2]);
+                $description = trim($matches[3]);
+                $stockAjoute = (int)$matches[4];
+                $prix = (float)$matches[5];
+
+                $medicament = $em->getRepository(Produit::class)->findOneBy([
+                    'Nom' => $nom,
+                    'dosage' => $dosage
+                ]);
+
+                if (!$medicament) {
+                    $medicament = new Produit();
+                    $medicament->setNom($nom);
+                    $medicament->setDosage($dosage);
+                    $medicament->setDescription($description);
+                    $medicament->setStock($stockAjoute);
+                    $medicament->setPrix($prix);
+                    $em->persist($medicament);
+                } else {
+                    $medicament->setStock($medicament->getStock() + $stockAjoute);
+
+                    if ($medicament->getPrix() === null || $medicament->getPrix() === 0.0) {
+                        $medicament->setPrix($prix);
+                    }
+                }
+
+                // Ajouter à la liste des résultats
+                $medicaments[] = [
+                    'nom' => $medicament->getNom(),
+                    'dosage' => $medicament->getDosage(),
+                    'instructions' => $medicament->getDescription(),
+                    'stock' => $medicament->getStock(),
+                    'prix' => $medicament->getPrix(),
+                ];
+            } else {
+                $erreurs[] = $line; // Stocker les lignes non reconnues
+            }
+        }
+
+        // Sauvegarder uniquement les nouveaux médicaments
+        $em->flush();
+
+        // Retourner la réponse
+        return new JsonResponse(['medicaments' => $medicaments, 'erreurs' => $erreurs]);
     }
 
     #[Route('/produit/get', name: 'get_produits', methods: ['GET'])]

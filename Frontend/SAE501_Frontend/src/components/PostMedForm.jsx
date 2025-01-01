@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Api from "./Api";
 import { useNavigate } from "react-router-dom";
+import PostMedPdf from "./PostMedPdf";
+
 
 function PostMedForm() {
    
@@ -184,10 +186,13 @@ function PostMedForm() {
                                         <button type="submit" className="w-full sm:w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white hover:bg-emerald-700">Créer un médicament</button>
                                     </div>
                                 </form>
+                                <PostMedPdf />
                             </div>
+                            
                         </div>
                     </div>
                 </div>
+                
             </div>
         </>
     )
