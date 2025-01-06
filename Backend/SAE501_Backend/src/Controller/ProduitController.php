@@ -132,7 +132,7 @@ class ProduitController extends AbstractController
                     'prix' => $produit->getPrix(),
                     'dosage' => $produit->getDosage(),
                     'stock' => $produit->getStock(),
-                    'categorie' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray()
+                    'categorie' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getNom())->toArray()
                 ];
             }, $produits);
             return $this->json($data, Response::HTTP_OK);
@@ -165,7 +165,7 @@ class ProduitController extends AbstractController
                 'prix' => $produits->getPrix(),
                 'dosage' => $produits->getDosage(),
                 'stock' => $produits->getStock(),
-                'categorie' => $produits->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray()
+                'categorie' => $produits->getCategorie()->map(fn(Categorie $categorie) => $categorie->getNom())->toArray()
             ];
 
             return $this->json([$data], Response::HTTP_OK);

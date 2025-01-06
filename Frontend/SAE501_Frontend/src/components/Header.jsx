@@ -17,6 +17,7 @@ function Header() {
             return (
                 <>
                     <NavLink to="/" className="text-white" onClick={logout}>Se déconnecter</NavLink>
+                    <NavLink to="/commande/liste" className="text-white">Commandes</NavLink>
                     <NavLink to="/dashboard" className="text-white">Tableau de bord</NavLink>
                 </>
             );
@@ -28,6 +29,7 @@ function Header() {
         if (Cookies.get('pharminnov_login')) {
             return (<>
             <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded" onClick={logout}>Se déconnecter</NavLink>
+            <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Commandes</NavLink>
             <NavLink to="/dashboard" className="block text-white bg-emerald-800 px-4 py-2 rounded">Tableau de bord</NavLink>
 
             </>)
