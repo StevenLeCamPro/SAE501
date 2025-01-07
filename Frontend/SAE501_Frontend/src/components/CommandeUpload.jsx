@@ -37,64 +37,75 @@ function CommandeUpload() {
 
     const handleFileUpload = async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page
-        if (!file) return;
-
+        if (!file) {
+            setError("Veuillez sélectionner un fichier.");
+            return;
+        }
+    
         setLoading(true);
         setError(null);
         setSuccessMessage(null);
-
+    
         try {
             const fileReader = new FileReader();
             fileReader.onload = async () => {
-                const pdfData = new Uint8Array(fileReader.result);
-                const pdf = await pdfjsLib.getDocument(pdfData).promise;
-
-                const extractedTexts = [];
-                
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({ scale: 2 });
-
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-
-                    const renderContext = {
-                        canvasContext: context,
-                        viewport: viewport,
-                    };
-                    await page.render(renderContext).promise;
-
-                    const imageData = canvas.toDataURL('image/png');
-                    console.log(`Analyse de la page ${i} en cours...`);
-
-                    const result = await Tesseract.recognize(imageData, 'fra', {
-                        logger: (m) => console.log(m),
-                    });
-
-                    const extractedText = result.data.text;
-                    const normalizedText = extractedText.normalize('NFC');
-                    extractedTexts.push(normalizedText);
+                try {
+                    const pdfData = new Uint8Array(fileReader.result);
+                    const pdf = await pdfjsLib.getDocument(pdfData).promise;
+    
+                    const extractedTexts = [];
+    
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const viewport = page.getViewport({ scale: 2 });
+    
+                        const canvas = document.createElement("canvas");
+                        const context = canvas.getContext("2d");
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+    
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport,
+                        };
+                        await page.render(renderContext).promise;
+    
+                        const imageData = canvas.toDataURL("image/png");
+                        console.log(`Analyse de la page ${i} en cours...`);
+    
+                        const result = await Tesseract.recognize(imageData, "fra", {
+                            logger: (m) => console.log(m),
+                        });
+    
+                        const extractedText = result.data.text;
+                        const normalizedText = extractedText.normalize("NFC");
+                        extractedTexts.push(normalizedText);
+                        setSuccessMessage(`Analyse de la page ${i}/${pdf.numPages} en cours...`);
+                    }
+    
+                    const fullText = extractedTexts.join("\n");
+                    console.log("Texte extrait complet :", fullText);
+    
+                    const response = await Api("commande", "post", null, { text: fullText });
+                    setMedicaments(response.medicaments);
+                    setCommandeId(response.commandeId);
+                    setSuccessMessage("Demande traitée avec succès.");
+                } catch (extractionError) {
+                    console.error("Erreur pendant l'extraction : ", extractionError);
+                    setError("Une erreur est survenue lors de l’analyse du fichier.");
+                } finally {
+                    setLoading(false);
                 }
-
-                const fullText = extractedTexts.join('\n');
-                console.log('Texte extrait complet :', fullText);
-
-                const response = await Api("commande", "post", null, { text: fullText });
-                setMedicaments(response.medicaments)
-                setCommandeId(response.commandeId);
-                setSuccessMessage('Demande traitée avec succès.');
             };
     
             fileReader.readAsArrayBuffer(file);
         } catch (err) {
-            console.error('Erreur:', err);
-            setError('Une erreur est survenue lors de l’envoi.');
-        } finally {
+            console.error("Erreur globale :", err);
+            setError("Une erreur est survenue lors de l'envoi.");
             setLoading(false);
         }
     };
+        
 
     return (
         <div className="min-h-screen bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
@@ -112,12 +123,13 @@ function CommandeUpload() {
                 >
                     Envoyer le fichier
                 </button>
+                <div className="w-full max-w-md">
+                {loading && <p className="text-emerald-600">Demande en cours...</p>}
+                {error && <p className="text-red-500">{error}</p>}
+                {successMessage && <p className="text-green-500">{successMessage}</p>}
+            </div>
             </form>
-            {loading && <p className="text-emerald-600 mt-4">Demande en cours...</p>}
-            {error && <p className="text-red-500 mt-4">{error}</p>}
-            {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
-            
-             
+           
         </div>
     );
 }

@@ -66,6 +66,7 @@ function GetMeds() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 p-6 mb-8">
                 {filteredProduits.map((produit, index) => {
+                    console.log(produit)
                     var imagePath = "http://127.0.0.1:8000" + produit.image;
                     return (
                         <div className="border-2 border-emerald-600 rounded-md bg-white shadow-lg p-4 mb-8" key={index}>

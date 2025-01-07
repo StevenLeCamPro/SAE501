@@ -14,53 +14,68 @@ function MedList() {
     }
   };
 
+  const deleteProduit = async (id) => {
+    try {
+      // Appelle l'API pour supprimer le produit
+      await Api("produit", "delete", id, null);
+  
+      // Met à jour l'état local pour exclure le produit supprimé
+      setProduits((prevProduits) => prevProduits.filter((produit) => produit.id !== id));
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+  
+
   useEffect(() => {
     fetchProduits();
+
+    console.log(produits)
   }, []);
 
   return (
     <div className="bg-orange-100 pb-10">
       
-      <div class="pb-6 overflow-scroll xl:overflow-hidden px-0">
-        <table class="mt-4 w-full min-w-max table-auto text-left">
+      <div className="pb-6 overflow-scroll xl:overflow-hidden px-0">
+        <table className="mt-4 w-full min-w-max table-auto text-left">
           <thead>
-            <tr class="text-sm leading-normal">
-              <th class="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+            <tr className="text-sm leading-normal">
+              <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Nom
               </th>
-              <th class="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+              <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Description
               </th>
-              <th class="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+              <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Prix
               </th>
-              <th class="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+              <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Catégorie
               </th>
-              <th class="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+              <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
             {produits.map((produit) => (
-              <tr key={produit.id} class="text-sm leading-normal">
-                <td class="xl:text-xl text-nunito border-y border-gray-300 p-4">
+              <tr key={produit.id} className="text-sm leading-normal">
+                <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
                   {produit.nom}
                 </td>
-                <td class="xl:text-xl text-nunito border-y border-gray-300 p-4">
+                <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
                   {produit.description}
                 </td>
-                <td class="xl:text-xl text-nunito border-y border-gray-300 p-4">
+                <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
                   {produit.prix} € unité
                 </td>
-                <td class="xl:text-xl text-nunito border-y border-gray-300 p-4">
-                  {produit.categorie}
+                <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
+                  {produit.categorieName}
                 </td>
-                <td class="xl:text-xl text-nunito border-y border-gray-300">
+                <td className="xl:text-xl text-nunito border-y border-gray-300">
                   <div className="flex justify-around">
-                    <NavLink to={`/medsbyid?id=${produit.id}`} class="" >
-                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="1280.000000pt" height="662.000000pt" viewBox="0 0 1280.000000 662.000000"preserveAspectRatio="xMidYMid meet" fill="currentColor" aria-hidden="true" class="h-4 w-4">
+                    <NavLink to={`/medsbyid?id=${produit.id}`} className="mx-4" >
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="1280.000000pt" height="662.000000pt" viewBox="0 0 1280.000000 662.000000"preserveAspectRatio="xMidYMid meet" fill="currentColor" aria-hidden="true" className="h-4 w-4">
                       <metadata>
                         Created by potrace 1.15, written by Peter Selinger 2001-2017
                       </metadata>
@@ -70,16 +85,16 @@ function MedList() {
                         </g>
                     </svg>
                     </NavLink>
-                    <NavLink to={`/dashboard/updateMed?id=${produit.id}`} class="mx-4" >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-4 w-4">
+                    <NavLink to={`/dashboard/updateMed?id=${produit.id}`} className="mx-4" >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-4 w-4">
                         <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"></path>
                       </svg>
                     </NavLink>
-                    <NavLink to={`/medsbyid?id=${produit.id}`} class="" >
-                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="26" height="26" viewBox="0 0 26 26" class="h-4 w-4">
-<path d="M 11 -0.03125 C 10.164063 -0.03125 9.34375 0.132813 8.75 0.71875 C 8.15625 1.304688 7.96875 2.136719 7.96875 3 L 4 3 C 3.449219 3 3 3.449219 3 4 L 2 4 L 2 6 L 24 6 L 24 4 L 23 4 C 23 3.449219 22.550781 3 22 3 L 18.03125 3 C 18.03125 2.136719 17.84375 1.304688 17.25 0.71875 C 16.65625 0.132813 15.835938 -0.03125 15 -0.03125 Z M 11 2.03125 L 15 2.03125 C 15.546875 2.03125 15.71875 2.160156 15.78125 2.21875 C 15.84375 2.277344 15.96875 2.441406 15.96875 3 L 10.03125 3 C 10.03125 2.441406 10.15625 2.277344 10.21875 2.21875 C 10.28125 2.160156 10.453125 2.03125 11 2.03125 Z M 4 7 L 4 23 C 4 24.652344 5.347656 26 7 26 L 19 26 C 20.652344 26 22 24.652344 22 23 L 22 7 Z M 8 10 L 10 10 L 10 22 L 8 22 Z M 12 10 L 14 10 L 14 22 L 12 22 Z M 16 10 L 18 10 L 18 22 L 16 22 Z"></path>
-</svg>
-                    </NavLink>
+                    <button onClick={() => deleteProduit(produit.id)} >
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="26" height="26" viewBox="0 0 26 26" className="h-4 w-4">
+                      <path d="M 11 -0.03125 C 10.164063 -0.03125 9.34375 0.132813 8.75 0.71875 C 8.15625 1.304688 7.96875 2.136719 7.96875 3 L 4 3 C 3.449219 3 3 3.449219 3 4 L 2 4 L 2 6 L 24 6 L 24 4 L 23 4 C 23 3.449219 22.550781 3 22 3 L 18.03125 3 C 18.03125 2.136719 17.84375 1.304688 17.25 0.71875 C 16.65625 0.132813 15.835938 -0.03125 15 -0.03125 Z M 11 2.03125 L 15 2.03125 C 15.546875 2.03125 15.71875 2.160156 15.78125 2.21875 C 15.84375 2.277344 15.96875 2.441406 15.96875 3 L 10.03125 3 C 10.03125 2.441406 10.15625 2.277344 10.21875 2.21875 C 10.28125 2.160156 10.453125 2.03125 11 2.03125 Z M 4 7 L 4 23 C 4 24.652344 5.347656 26 7 26 L 19 26 C 20.652344 26 22 24.652344 22 23 L 22 7 Z M 8 10 L 10 10 L 10 22 L 8 22 Z M 12 10 L 14 10 L 14 22 L 12 22 Z M 16 10 L 18 10 L 18 22 L 16 22 Z"></path>
+                    </svg>
+                    </button>
                   </div>
                 </td>
               </tr>

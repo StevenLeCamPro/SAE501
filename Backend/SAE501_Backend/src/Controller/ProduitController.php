@@ -132,7 +132,8 @@ class ProduitController extends AbstractController
                     'prix' => $produit->getPrix(),
                     'dosage' => $produit->getDosage(),
                     'stock' => $produit->getStock(),
-                    'categorie' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getNom())->toArray()
+                    'categorie' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray(),
+                    'categorieName' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getNom())->toArray()
                 ];
             }, $produits);
             return $this->json($data, Response::HTTP_OK);

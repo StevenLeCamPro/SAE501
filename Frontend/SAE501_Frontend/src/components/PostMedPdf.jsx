@@ -17,67 +17,75 @@ function PostMedPdf({ onMedicamentsExtracted }) {
 
     const handleFileUpload = async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page
-        if (!file) return; // Si aucun fichier n'est sélectionné, on quitte
-
-        setLoading(true); // Active le loader immédiatement
+        if (!file) {
+            setError("Veuillez sélectionner un fichier."); // Si aucun fichier n'est sélectionné
+            return;
+        }
+    
+        setLoading(true); // Active le loader
         setError(null); // Réinitialise les erreurs
         setSuccessMessage(null); // Réinitialise le message de succès
-
+    
         try {
             const fileReader = new FileReader();
-            fileReader.onload = async () => {
-                const pdfData = new Uint8Array(fileReader.result);
-                const pdf = await pdfjsLib.getDocument(pdfData).promise;
-
-                console.log(`PDF chargé avec ${pdf.numPages} pages.`);
-                const extractedTexts = [];
-                
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({ scale: 2 });
-
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-
-                    const renderContext = {
-                        canvasContext: context,
-                        viewport: viewport,
-                    };
-                    await page.render(renderContext).promise;
-
-                    const imageData = canvas.toDataURL('image/png');
-                    console.log(`Analyse de la page ${i} en cours...`);
-
-                    const result = await Tesseract.recognize(imageData, 'fra', {
-                        logger: (m) => console.log(m), // Affiche les logs de Tesseract
-                    });
-
-                    // Nettoyage et normalisation du texte extrait
-                    const extractedText = result.data.text;
-                    const normalizedText = extractedText.normalize('NFC'); // Normalisation Unicode pour accents
-                    extractedTexts.push(normalizedText);
-                }
-
-                const fullText = extractedTexts.join('\n');
-                console.log('Texte extrait complet :', fullText);
-
-                // Envoi à l'API Symfony
-                const response = await Api("produit/pdf", "post", null, { text: fullText });
-   
-
-                setSuccessMessage('Demande traitée avec succès.');
-            };
-
+    
+            const readFile = new Promise((resolve, reject) => {
+                fileReader.onload = () => resolve(fileReader.result);
+                fileReader.onerror = () => reject(new Error("Erreur lors de la lecture du fichier."));
+            });
+    
             fileReader.readAsArrayBuffer(file);
+    
+            const pdfData = new Uint8Array(await readFile); // Lecture réussie
+            const pdf = await pdfjsLib.getDocument(pdfData).promise;
+    
+            console.log(`PDF chargé avec ${pdf.numPages} pages.`);
+    
+            const extractedTexts = [];
+    
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({ scale: 2 });
+    
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+    
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport,
+                };
+                await page.render(renderContext).promise;
+    
+                const imageData = canvas.toDataURL("image/png");
+                console.log(`Analyse de la page ${i} en cours...`);
+    
+                const result = await Tesseract.recognize(imageData, "fra", {
+                    logger: (m) => console.log(m), // Logs Tesseract
+                });
+    
+                // Nettoyage et normalisation du texte extrait
+                const extractedText = result.data.text;
+                const normalizedText = extractedText.normalize("NFC");
+                extractedTexts.push(normalizedText);
+            }
+    
+            const fullText = extractedTexts.join("\n");
+            console.log("Texte extrait complet :", fullText);
+    
+            // Envoi à l'API Symfony
+            const response = await Api("produit/pdf", "post", null, { text: fullText });
+    
+            setSuccessMessage("Demande traitée avec succès.");
         } catch (err) {
-            setError('Erreur lors du traitement du fichier PDF.');
-            console.error(err);
+            console.error("Erreur :", err);
+            setError("Erreur lors du traitement du fichier PDF.");
         } finally {
-            setLoading(false); // Arrêter le loader une fois terminé
+            setLoading(false); // Désactive le loader, quoi qu'il arrive
         }
     };
+    
 
     return (
         <div>
