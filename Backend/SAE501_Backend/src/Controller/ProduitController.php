@@ -61,7 +61,8 @@ class ProduitController extends AbstractController
         }
 
         foreach ($lines as $line) {
-            if (preg_match('/^([\p{L}\p{M}\'\s\-]+)\s+\(([\d\.]+(?:mg|g|ml|mI|mL|Ul|µg))\):\s+(.*)\s+\[Stock:\s*(\d+)\]\s+\[Prix:\s*([\d\.]+)\]$/iu', $line, $matches)) {
+            if (preg_match(
+                '/^([\p{L}\p{M}\'\s\-]+)\s+\(([\d\.]+(?:mg|g|ml|mI|mL|Ul|µg))\):\s+(.*)\s+\[Stock:\s*(\d+)\]\s+\[Prix:\s*([\d\.]+)\]$/iu', $line, $matches)) {
                 $nom = trim($matches[1]);
                 $dosage = trim($matches[2]);
                 $description = trim($matches[3]);
@@ -72,7 +73,6 @@ class ProduitController extends AbstractController
                     'Nom' => $nom,
                     'dosage' => $dosage
                 ]);
-
                 if (!$medicament) {
                     $medicament = new Produit();
                     $medicament->setNom($nom);
@@ -88,8 +88,7 @@ class ProduitController extends AbstractController
                         $medicament->setPrix($prix);
                     }
                 }
-
-                // Ajouter à la liste des résultats
+                // Ajouter les médicaments la liste des résultats
                 $medicaments[] = [
                     'nom' => $medicament->getNom(),
                     'dosage' => $medicament->getDosage(),
@@ -131,7 +130,7 @@ class ProduitController extends AbstractController
                     'imageId' => $imageId,
                     'prix' => $produit->getPrix(),
                     'dosage' => $produit->getDosage(),
-                    'stock' => $produit->getStock(),
+                    'stock' => $produit->getStock() <= 10 ? 'insuffisant' : $produit->getStock(),
                     'categorie' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray(),
                     'categorieName' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getNom())->toArray()
                 ];

@@ -38,71 +38,71 @@ function CommandeUpload() {
     const handleFileUpload = async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page
         if (!file) {
-            setError("Veuillez sélectionner un fichier.");
+            setError("Veuillez sélectionner un fichier."); // Affiche une erreur si aucun fichier n'est sélectionné
             return;
         }
     
-        setLoading(true);
-        setError(null);
-        setSuccessMessage(null);
+        setLoading(true); // Indique que le chargement est en cours
+        setError(null); // Réinitialise les erreurs précédentes
+        setSuccessMessage(null); // Réinitialise les messages de succès précédents
     
         try {
-            const fileReader = new FileReader();
+            const fileReader = new FileReader(); // Crée un nouveau FileReader pour lire le fichier
             fileReader.onload = async () => {
                 try {
-                    const pdfData = new Uint8Array(fileReader.result);
-                    const pdf = await pdfjsLib.getDocument(pdfData).promise;
+                    const pdfData = new Uint8Array(fileReader.result); // Convertit le fichier en Uint8Array
+                    const pdf = await pdfjsLib.getDocument(pdfData).promise; // Charge le document PDF
     
-                    const extractedTexts = [];
+                    const extractedTexts = []; // Tableau pour stocker les textes extraits
     
-                    for (let i = 1; i <= pdf.numPages; i++) {
-                        const page = await pdf.getPage(i);
-                        const viewport = page.getViewport({ scale: 2 });
+                    for (let i = 1; i <= pdf.numPages; i++) { // Récupère chaque page du PDF
+                        const page = await pdf.getPage(i); // Récupère la page actuelle
+                        const viewport = page.getViewport({ scale: 2 }); // Définit le viewport pour le rendu
     
-                        const canvas = document.createElement("canvas");
-                        const context = canvas.getContext("2d");
-                        canvas.width = viewport.width;
-                        canvas.height = viewport.height;
+                        const canvas = document.createElement("canvas"); // Crée un élément canvas
+                        const context = canvas.getContext("2d"); // Récupère le contexte 2D du canvas pour le rendu
+                        canvas.width = viewport.width; // Définit la largeur du canvas
+                        canvas.height = viewport.height; // Définit la hauteur du canvas
     
                         const renderContext = {
                             canvasContext: context,
                             viewport: viewport,
                         };
-                        await page.render(renderContext).promise;
+                        await page.render(renderContext).promise; // Rend la page sur le canvas
     
-                        const imageData = canvas.toDataURL("image/png");
-                        console.log(`Analyse de la page ${i} en cours...`);
+                        const imageData = canvas.toDataURL("image/png"); // Convertit le canvas en image PNG
+                        console.log(`Analyse de la page ${i} en cours...`); // Log l'état de l'analyse de la page actuelle
     
                         const result = await Tesseract.recognize(imageData, "fra", {
-                            logger: (m) => console.log(m),
+                            logger: (m) => console.log(m), // Log les messages de progression de Tesseract
                         });
     
-                        const extractedText = result.data.text;
-                        const normalizedText = extractedText.normalize("NFC");
-                        extractedTexts.push(normalizedText);
-                        setSuccessMessage(`Analyse de la page ${i}/${pdf.numPages} en cours...`);
+                        const extractedText = result.data.text; // Récupère le texte extrait par Tesseract
+                        const normalizedText = extractedText.normalize("NFC"); // Normalise le texte extrait pour éviter les problèmes d'encodage
+                        extractedTexts.push(normalizedText); // Ajoute le texte extrait au tableau
+                        setSuccessMessage(`Analyse de la page ${i}/${pdf.numPages} en cours...`); // Met à jour le message de succès
                     }
     
-                    const fullText = extractedTexts.join("\n");
-                    console.log("Texte extrait complet :", fullText);
+                    const fullText = extractedTexts.join("\n"); // Concatène tous les textes extraits
+                    console.log("Texte extrait complet :", fullText); // Log le texte complet extrait
     
-                    const response = await Api("commande", "post", null, { text: fullText });
-                    setMedicaments(response.medicaments);
-                    setCommandeId(response.commandeId);
-                    setSuccessMessage("Demande traitée avec succès.");
+                    const response = await Api("commande", "post", null, { text: fullText }); // Envoie le texte extrait à l'API
+                    setMedicaments(response.medicaments); // Met à jour les médicaments avec la réponse de l'API
+                    setCommandeId(response.commandeId); // Met à jour l'ID de la commande avec la réponse de l'API
+                    setSuccessMessage("Demande traitée avec succès."); // Affiche un message de succès
                 } catch (extractionError) {
-                    console.error("Erreur pendant l'extraction : ", extractionError);
-                    setError("Une erreur est survenue lors de l’analyse du fichier.");
+                    console.error("Erreur pendant l'extraction : ", extractionError); // Log l'erreur d'extraction
+                    setError("Une erreur est survenue lors de l’analyse du fichier."); // Affiche un message d'erreur
                 } finally {
-                    setLoading(false);
+                    setLoading(false); // Indique que le chargement est terminé
                 }
             };
     
-            fileReader.readAsArrayBuffer(file);
+            fileReader.readAsArrayBuffer(file); // Lit le fichier en tant que ArrayBuffer
         } catch (err) {
-            console.error("Erreur globale :", err);
-            setError("Une erreur est survenue lors de l'envoi.");
-            setLoading(false);
+            console.error("Erreur globale :", err); // Log l'erreur globale
+            setError("Une erreur est survenue lors de l'envoi."); // Affiche un message d'erreur
+            setLoading(false); // Indique que le chargement est terminé
         }
     };
         

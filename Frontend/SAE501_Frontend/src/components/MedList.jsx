@@ -47,6 +47,9 @@ function MedList() {
                 Description
               </th>
               <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                Stock
+              </th>
+              <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Prix
               </th>
               <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
@@ -65,6 +68,9 @@ function MedList() {
                 </td>
                 <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
                   {produit.description}
+                </td>
+                <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
+                  {produit.stock}
                 </td>
                 <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
                   {produit.prix} € unité

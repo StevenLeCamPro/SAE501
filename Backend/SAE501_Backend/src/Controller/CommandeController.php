@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 
+
+
 #[Route('/commande')]
 class CommandeController extends AbstractController
 {
@@ -180,6 +182,7 @@ class CommandeController extends AbstractController
                    // Vérifier si la quantité demandée est disponible en tenant compte du stock de sécurité
                    $stockSecurite = 10;
                    if ($med['quantite'] > ($stockActuel - $stockSecurite)) {
+                       $this->addFlash('error', "Stock insuffisant pour le médicament: {$med['Nom']}. Disponible: {$stockActuel}, demandé: {$med['quantite']}, stock de sécurité: {$stockSecurite}");
                        throw new \Exception("Stock insuffisant pour le médicament: {$med['Nom']}. Disponible: {$stockActuel}, demandé: {$med['quantite']}, stock de sécurité: {$stockSecurite}");
                    }
 
@@ -196,10 +199,12 @@ class CommandeController extends AbstractController
            // Supprimer la commande après validation
            $this->em->remove($commande);
            $this->em->flush();
-
+           $this->addFlash('success','Commande validée avec succès.');
            return new JsonResponse(['message' => 'Commande validée avec succès.']);
+           
        } catch (\Exception $e) {
            $this->logger->error('Erreur lors de la validation de la commande : ' . $e->getMessage());
+           
            return new JsonResponse(['error' => 'Erreur lors de la validation de la commande.'], 500);
        }
    }
