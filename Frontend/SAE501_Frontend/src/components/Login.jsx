@@ -24,7 +24,6 @@ function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                // Stocker les informations dans les cookies
                 Cookies.set('pharminnov_login', JSON.stringify({
                     user_id: data.user_id,
                     role: data.role,
@@ -35,9 +34,8 @@ function Login() {
                 console.log('Login successful!');
                 GetCookieInfo();
 
-                // Afficher un message et rediriger vers la page d'accueil
                 alert("Connexion réussie !");
-                navigate('/'); // Rediriger vers la page d'accueil
+                navigate('/');
             } else {
                 setErrorMessage(data.error || "Connexion échouée. Veuillez réessayer.");
             }
