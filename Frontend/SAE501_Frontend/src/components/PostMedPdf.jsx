@@ -4,10 +4,6 @@ import Tesseract from 'tesseract.js';
 import Api from './Api';
 // Définir le chemin vers le worker pour pdf.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs';
-// le but du worker est de relayer les fonctions gourmandes dans un traitement 
-// à part pour ne pas bloquer le traitement principal
-// cela permet d'améliorer les performanes, 
-// et de répartir la charge de travail, comme son nom l'indique.
 
 function PostMedPdf() {
     const [loading, setLoading] = useState(false); // État pour le loader
