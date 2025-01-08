@@ -1,20 +1,15 @@
 import ApiRouter from "./ApiRouter";
 
 function Api(table, method, id, content) {
-
     const url = ApiRouter(table, method, id)
-
     const requestOptions = {
         method: method.toUpperCase(),
         headers: { 'Content-Type': 'application/json' },
     };
-
     if (content) {
         requestOptions.body = JSON.stringify(content);
     }
-
     console.log(requestOptions)
-
     return fetch(url, requestOptions)
         .then((response) => {
             if (!response.ok) {
@@ -39,7 +34,6 @@ function Api(table, method, id, content) {
             console.error("API Error:", error);
             throw error;
         })
-
 }
 
 export default Api
