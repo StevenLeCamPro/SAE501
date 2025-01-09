@@ -66,8 +66,8 @@ function CommandeGet() {
                             <p className="text-base xl:text-xl"><span className="font-bold">Prix total :</span> {commande.prix_total ? commande.prix_total.toFixed(2) : 'Non calculé'} €</p>
                             <div className="flex justify-around my-4 xl:mt-10">
                                 
-        <button onClick={() => handleValidateCommande(commande.id)} className="bg-emerald-600 text-white px-4 py-4 rounded-md text-base xl:text-xl">Valider</button>
-        <button onClick={() => handleDeleteCommande(commande.id)} className="bg-red-600 text-white px-4 py-4 rounded-md text-base xl:text-xl">Supprimer</button>
+        <button onClick={() => handleValidateCommande(commande.id, setCommandes)} className="bg-emerald-600 text-white px-4 py-4 rounded-md text-base xl:text-xl">Valider</button>
+        <button onClick={() => handleDeleteCommande(commande.id, setCommandes)} className="bg-red-600 text-white px-4 py-4 rounded-md text-base xl:text-xl">Supprimer</button>
 
                             </div>
                         </div>
