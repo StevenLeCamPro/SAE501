@@ -41,7 +41,7 @@ class ImageController extends AbstractController
         $em->persist($image);
         $em->flush();
 
-        return $this->json(['message' => 'File uploaded successfully', 'path' => '/uploads/' . $filename,], 200);
+        return $this->json(['message' => 'File uploaded successfully', 'path' => '/uploads/' . $filename, 'id' => $image->getId()], 200);
     }
 
     #[Route('/image/get', name: 'get_image', methods: ['GET'])]

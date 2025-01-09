@@ -89,12 +89,14 @@ function PostMedForm() {
                     const result = await Api("image", "post", null, data);
                     console.log("Upload successful:", result);
 
-                    fetchDatabaseImages();
+                    imageId = result.id
 
-                    console.log(databaseImages)
+                    // await fetchDatabaseImages();
 
-                    const lastImage = databaseImages.slice(-1)[0];
-                    imageId = lastImage ? lastImage.id : null;
+                    // console.log(databaseImages)
+
+                    // const lastImage = databaseImages.slice(-1)[0];
+                    // imageId = lastImage ? lastImage.id : null;
 
                     const dataMed = { nom, description, prix, categorie, imageId, stock, dosage };
 
