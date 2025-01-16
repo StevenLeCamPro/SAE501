@@ -21,15 +21,16 @@ class UserController extends AbstractController
         // return $this->json($users);
         $users = $em->getRepository(User::class)->findAll();
         if ($users) {
-            $data = array_map(function ($category) {
+            $data = array_map(function ($user) {
                 return [
-                    'id' => $category->getId(),
-                    'name' => $category->getName(),
-                    'firstName' => $category->getFirstName(),
-                    'email' => $category->getEmail(),
-                    'birthDate' => $category->getBirthDate(),
-                    'phone'=> $category->getPhone(),
-                    'address'=> $category->getAddress(),
+                    'id' => $user->getId(),
+                    'name' => $user->getName(),
+                    'firstName' => $user->getFirstName(),
+                    'email' => $user->getEmail(),
+                    'birthDate' => $user->getBirthDate(),
+                    'phone'=> $user->getPhone(),
+                    'roles'=> $user->getRoles(),
+                    'address'=> $user->getAddress(),
 
                 ];
             }, $users);
@@ -45,13 +46,17 @@ class UserController extends AbstractController
         // $user = $this->getUser();
         // return $this->json($user);
 
-        $users = $em->getRepository(User::class)->find($id);
-        if ($users) {
+        $user = $em->getRepository(User::class)->find($id);
+        if ($user) {
             $data = [
-                'id' => $users->getId(),
-                'name' => $users->getName(),
-                'email' => $users->getEmail(),
-                'password' => $users->getPassword()
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+                'firstName' => $user->getFirstName(),
+                'email' => $user->getEmail(),
+                'birthDate' => $user->getBirthDate(),
+                'phone'=> $user->getPhone(),
+                'roles'=> $user->getRoles(),
+                'address'=> $user->getAddress(),
             ];
             return $this->json([$data], Response::HTTP_OK);
         } else {
