@@ -22,6 +22,7 @@ import DashboardMed from './pages/DashboardMed.jsx'
 import CommandeUpload from './components/CommandeUpload.jsx'
 import CommandeGet from './components/CommandeGet.jsx'
 import PostMedPdf from './components/PostMedPdf.jsx'
+import DashboardUser from './pages/DashboardUser.jsx'
 
 const router = createBrowserRouter(
   [
@@ -100,6 +101,10 @@ const router = createBrowserRouter(
         {
           path: "/commande/liste",
           element: <CommandeGet />
+        },
+        {
+          path: "dashboard/user",
+          element: <DashboardUser />
         }
 
       ]

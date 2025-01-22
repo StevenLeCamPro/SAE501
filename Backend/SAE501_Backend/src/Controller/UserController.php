@@ -10,6 +10,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\User;
+use App\Entity\UserToken;
 
 class UserController extends AbstractController
 {
@@ -91,24 +92,29 @@ class UserController extends AbstractController
                 return $this->json(['message' => 'Le champ "email" est requis'], Response::HTTP_BAD_REQUEST);
             }
 
-            if (!isset($data['confirmPassword'])) {
-                return $this->json(['message' => 'Le champs confirmation de mot de passe est obligatoire'], Response::HTTP_BAD_REQUEST);
-            }
+            // if (!isset($data['confirmPassword'])) {
+            //     return $this->json(['message' => 'Le champs confirmation de mot de passe est obligatoire'], Response::HTTP_BAD_REQUEST);
+            // }
 
-            if (isset($data['password'])) {
-                $users->setPassword($data['password']);
-            } else {
-                return $this->json(['message' => 'Le champ "password" est requis'], Response::HTTP_BAD_REQUEST);
-            }
+            // if (isset($data['password'])) {
+            //     $users->setPassword($data['password']);
+            // } else {
+            //     return $this->json(['message' => 'Le champ "password" est requis'], Response::HTTP_BAD_REQUEST);
+            // }
 
-            if ($data['password'] != $data['confirmPassword']) {
-                return $this->json(['message' => 'Le mot de passe est la confirmation de mot de passe ne correspondent pas'], Response::HTTP_BAD_REQUEST);
-            }
+            // if ($data['password'] != $data['confirmPassword']) {
+            //     return $this->json(['message' => 'Le mot de passe est la confirmation de mot de passe ne correspondent pas'], Response::HTTP_BAD_REQUEST);
+            // }
 
             if (isset($data['phone'])) {
                 $users->setPhone($data['phone']);
             } else {
                 return $this->json(['message' => 'Le champ "phone" est requis'], Response::HTTP_BAD_REQUEST);
+            }
+            if (isset($data['address'])) {
+                $users->setAddress($data['address']);
+            } else {
+                return $this->json(['message' => 'Le champ "address" est requis'], Response::HTTP_BAD_REQUEST);
             }
             
             $em->persist($users);
@@ -152,8 +158,13 @@ class UserController extends AbstractController
     public function DeleteCategorieById(EntityManagerInterface $em, $id): Response
     {
         $user = $em->getRepository(User::class)->find($id);
+        $token = $em->getRepository(UserToken::class)->findOneBy(['User' => $user->getId()]);
 
         if ($user) {
+            if ($token) {
+                $em->remove($token);
+            }
+            
             $em->remove($user);
             $em->flush();
 

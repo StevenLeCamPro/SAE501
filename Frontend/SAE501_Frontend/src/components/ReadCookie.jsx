@@ -5,7 +5,7 @@ function useCheckRole(requiredRole) {
     const authData = Cookies.get('pharminnov_login');
     if (!authData) {
         console.log('not connected')
-        alert('Vous n\'êtes pas connecté.')
+        
         return 0;
     }
 
@@ -13,7 +13,7 @@ function useCheckRole(requiredRole) {
 
     if (!user_id || role < requiredRole) {
         console.log('not the good role')
-        alert('Vous ne pouvez pas vour rendre sur cette page.')
+       
         return 1;
     }
 

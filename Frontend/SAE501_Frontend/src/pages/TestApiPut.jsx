@@ -1,190 +1,228 @@
 import { useEffect, useState } from "react";
 import Api from "../components/Api";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import useCheckRole from "../components/ReadCookie";
 
 function TestApiPut() {
+  const [searchParams] = useSearchParams();
+  const medid = searchParams.get("id");
 
-    const [searchParams] = useSearchParams();
-    const userid = searchParams.get("id");
+  const [id, setId] = useState(medid ?? null);
+  const [name, setname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [databaseUser, setDatabaseUser] = useState([]);
 
-    const [users, setUsers] = useState([])
+  const navigate = useNavigate();
 
-    const fetchUsers = async () => {
-        try {
-            const result = await Api("user", "get", userid, null);
-            setUsers(result);
-        } catch (error) {
-            console.error("Error fetching user:", error);
-        }
+  const fetchUserList = async () => {
+    try {
+      const user = await Api("user", "get", null, null);
+      setDatabaseUser(user);
+    } catch (error) {
+      console.error(
+        "Oups, il y a eu un problème lors de la récupération des utilisateurs:",
+        error
+      );
+    }
+  };
+
+  const setUserData = () => {
+    const user = databaseUser.find((user) => user.id == id);
+    if (user) {
+      setname(user.name);
+      setFirstName(user.firstName);
+      setEmail(user.email);
+      setPhone(user.phone);
+      setAddress(user.address);
+    }
+  };
+
+  useEffect(() => {
+    const initializeData = async () => {
+      await fetchUserList();
     };
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
+    initializeData();
+  }, []);
 
-    const handleChangeName = (id, value) => {
-        setUsers((prevUsers) =>
-            prevUsers.map((user) =>
-                user.id === id ? { ...user, name: value } : user
-            )
-        );
-    };
+  useEffect(() => {
+    if (databaseUser.length > 0 && id) {
+      setUserData();
+    }
+  }, [id, databaseUser]);
 
-    const handleChangeFirstName = (id, value) => {
-        setUsers((prevUsers)=>
-        prevUsers.map((user) =>
-            user.id === id ? { ...user, firstName: value} : user
-    )
-        );
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const handleChangeEmail = (id, value) => {
-        setUsers((prevUsers) =>
-            prevUsers.map((user) =>
-                user.id === id ? { ...user, email: value } : user
-            )
-        );
-    };
+    const dataUser = { name, firstName, email, phone, address };
 
-    const handleChangePassword = (id, value) => {
-        setUsers((prevUsers) =>
-            prevUsers.map((user) =>
-                user.id === id ? { ...user, password: value } : user
-            )
-        );
-    };
-  
+    console.log(dataUser);
 
-    const handleSubmit = async (e, id) => {
-        e.preventDefault();
+    try {
+      const result = await Api("user", "put", id, dataUser);
+      console.log("API Response:", result);
+      alert("L'utilisateur a bien été modifié");
+      navigate("/dashboard");
+      
+    } catch (error) {
+      console.error("Erreur pendant la modification de l'utilisateur :", error);
+      alert("Erreur pendant la modification de l'utilisateur");
+    }
+  };
 
-        const user = users.find((cat) => cat.id === id);
+  const selectAdmin = () => {
+    const access = useCheckRole(2);
+    if (access === 2) {
+      return (
+        <div>
+          <form>
+            <select
+              name="choixUser"
+              id="choixUser"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              className="mt-4 w-full border border-gray-300 rounded-md p-2"
+            >
+              <option value="">Choisissez l'utilisateur à modifier</option>
+              {databaseUser.map((user) => {
+                return (
+                  <option value={user.id} key={user.id}>
+                    {user.name} {user.firstName}
+                  </option>
+                );
+              })}
+            </select>
+          </form>
+        </div>
+      );
+    }
+  };
 
-        if (!user.name.trim()) {
-            alert("Name cannot be empty");
-            return;
-        }
+  return (
+    <>
+      <div className="bg-orange-100 min-h-screen flex items-center justify-center">
+        <div
+          className="bg-cover bg-center h-54 lg:py-14 relative w-full"
+          style={{ backgroundImage: "url('/arriereplan.jpg')" }}
+        >
+          <div className="absolute inset-0 bg-black opacity-65"></div>
+          <div className="relative mx-auto my-20 w-5/6 lg:w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10">
+            <div className="w-full">
+              <div className="text-center">
+                <h1 className="text-3xl font-semibold text-gray-900">
+                  Modification de l'utilisateur
+                </h1>
+                <p className="mt-2 text-gray-500">
+                  Remplissez le formulaire ci-dessous pour modifier un
+                  utilisateur
+                </p>
+              </div>
+              {selectAdmin()}
+              <div className="mt-5">
+                <form
+                  onSubmit={handleSubmit}
+                  className="grid grid-cols-2 gap-6"
+                >
+                  <div className="relative mt-6">
+                    <input
+                      type="text"
+                      name="name"
+                      value={name}
+                      onChange={(e) => setname(e.target.value)}
+                      placeholder="name"
+                      className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
+                    />
+                    <label
+                      htmlFor="name"
+                      className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
+                    >
+                      Nom
+                    </label>
+                  </div>
 
-        if (!user.email.trim()) {
-            alert("Email cannot be empty");
-            return;
-        }
-
-        if (!user.firstName.trim()) {
-            alert("First name cannot be empty");
-            return;
-        }
-        if (!user.password.trim()) {
-            alert("Password cannot be empty");
-            return;
-        }
-
-        const data = {name: user.name, firstName: user.firstName, email: user.email, password: user.password};
-
-        console.log(data)
-
-        try {
-            await Api("user", "put", id, data);
-            alert("User updated successfully");
-        } catch (error) {
-            console.error("Error updating user:", error);
-        }
-    };
-
-    return (
-        <>
-        <div className="bg-orange-100 min-h-screen flex items-center justify-center">
-  <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
-    <div className="absolute inset-0 bg-black opacity-65"></div>
-    <div className="relative mx-auto my-20 w-5/6 lg:w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10">
-      <div className="w-full">
-        {users.map((user) => {
-          return (
-            <div key={user.id} className="mt-6">
-              <form onSubmit={(e) => handleSubmit(e, user.id)} className="grid grid-cols-2 gap-6">
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="name"
-                    value={user.name}
-                    onChange={(e) => handleChangeName(user.id, e.target.value)}
-                    placeholder="Nom"
-                    className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
-                  />
-                  <label
-                    htmlFor="name"
-                    className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
-                  >
-                    Nom
-                  </label>
-                </div>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={user.firstName}
-                    onChange={(e) => handleChangeFirstName(user.id, e.target.value)}
-                    placeholder="Prénom"
-                    className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
-                  />
-                  <label
-                    htmlFor="firstName"
-                    className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
-                  >
-                    Prénom
-                  </label>
-                </div>
-                <div className="relative">
-                  <input
-                    type="email"
-                    name="email"
-                    value={user.email}
-                    onChange={(e) => handleChangeEmail(user.id, e.target.value)}
-                    placeholder="Email"
-                    className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
-                  />
-                  <label
-                    htmlFor="email"
-                    className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
-                  >
-                    Email
-                  </label>
-                </div>
-                <div className="relative">
-                  <input
-                    type="password"
-                    name="password"
-                    value={user.password}
-                    onChange={(e) => handleChangePassword(user.id, e.target.value)}
-                    placeholder="Mot de passe"
-                    className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
-                  />
-                  <label
-                    htmlFor="password"
-                    className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
-                  >
-                    Mot de passe
-                  </label>
-                </div>
-                <div className="col-span-2 text-center">
-                  <button
-                    type="submit"
-                    className="mt-4 w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white"
-                  >
-                    Envoyer
-                  </button>
-                </div>
-              </form>
+                  <div className="relative mt-6">
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      placeholder="Prénom"
+                      className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
+                    />
+                    <label
+                      htmlFor="name"
+                      className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
+                    >
+                      Prénom
+                    </label>
+                  </div>
+                  <div className="relative mt-6">
+                    <input
+                      type="email"
+                      name="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Email"
+                      className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
+                    />
+                    <label
+                      htmlFor="email"
+                      className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
+                    >
+                      Email
+                    </label>
+                  </div>
+                  <div className="relative mt-6">
+                    <input
+                      type="phone"
+                      name="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="N° de téléphone"
+                      className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
+                    />
+                    <label
+                      htmlFor="phone"
+                      className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
+                    >
+                      N° de téléphone
+                    </label>
+                  </div>
+                  <div className="relative mt-6">
+                    <input
+                      type="address"
+                      name="address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="Adresse"
+                      className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none"
+                    />
+                    <label
+                      htmlFor="address"
+                      className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
+                    >
+                      Adresse
+                    </label>
+                  </div>
+                  <div className="col-span-2 my-6 text-center">
+                    <button
+                      type="submit"
+                      className="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white"
+                    >
+                      Modifier le médicament
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-          );
-        })}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-
-        </>
-    )
+    </>
+  );
 }
 
-export default TestApiPut
+export default TestApiPut;

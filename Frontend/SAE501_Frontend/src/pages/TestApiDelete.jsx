@@ -1,20 +1,22 @@
 import Api from "../components/Api";
 
 function TestApiDelete({ id, onDelete }) {
+    const [user, setUser]  = useState("");
     const handleDelete = async () => {
-        if (!window.confirm("Are you sure you want to delete this user?")) {
+        if (!window.confirm("Voulez-vous vraiment supprimer cet utilisateur ?")) {
             return;
         }
 
         try {
             await Api("user", "delete", id);
-            alert("User deleted successfully");
+            alert("Utilisateur supprimé avec succès");
+
             if (onDelete) {
                 onDelete(id);
             }
         } catch (error) {
-            console.error("Error deleting user:", error);
-            alert("Error deleting user.");
+            console.error("Error :", error);
+            alert("Oups, il y a eu une erreur.");
         }
     };
 
