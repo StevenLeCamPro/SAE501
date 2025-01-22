@@ -19,6 +19,7 @@ function Header() {
                     <NavLink to="/" className="text-white" onClick={logout}>Se déconnecter</NavLink>
                     <NavLink to="/commande/liste" className="text-white">Commandes</NavLink>
                     <NavLink to="/dashboard" className="text-white">Tableau de bord</NavLink>
+                    <NavLink to="/profil" className="text-white">Profil</NavLink>
                 </>
             );
         }
@@ -31,6 +32,7 @@ function Header() {
             <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded" onClick={logout}>Se déconnecter</NavLink>
             <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Commandes</NavLink>
             <NavLink to="/dashboard" className="block text-white bg-emerald-800 px-4 py-2 rounded">Tableau de bord</NavLink>
+            <NavLink to="/profil" className="block text-white bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
 
             </>)
         }
