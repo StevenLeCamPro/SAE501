@@ -1,8 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import Api from "./Api";
 import { useEffect, useState } from "react";
-import useCheckRole from "./ReadCookie";
-import roleValidator from "./CookieValidator";
+
 
 function GetMeds() {
     const [produits, setProduits] = useState([]);
@@ -31,13 +30,7 @@ function GetMeds() {
 
     useEffect(() => {
         const checkAccess = async () => {
-            const access = await roleValidator(1);
-            console.log(access);
-
-            if (!access) {
-                navigate('/');
-                return;
-            }
+       
 
             fetchProduits();
             fetchCategories();

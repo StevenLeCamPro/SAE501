@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-
 import Cookies from 'js-cookie';
-import logout from "./Logout";
+import useCheckRole from "./ReadCookie";
+
 
 function Header() {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -13,27 +13,33 @@ function Header() {
     };
 
     const loginNav = () => {
-        if (Cookies.get('pharminnov_login')) {
+        const roleAccess = useCheckRole(2);
+        if (roleAccess === 2) {
             return (
                 <>
-                    <NavLink to="/" className="text-white" onClick={logout}>Se déconnecter</NavLink>
                     <NavLink to="/commande/liste" className="text-white">Commandes</NavLink>
                     <NavLink to="/dashboard" className="text-white">Tableau de bord</NavLink>
                     <NavLink to="/profil" className="text-white">Profil</NavLink>
                 </>
             );
-        }
+        } else if (roleAccess === 1) {
+            return (
+                <>
+                    <NavLink to="/commande/liste" className="text-white">Commandes</NavLink>
+                    <NavLink to="/profil" className="text-white">Profil</NavLink>
+                </>
+            );
+        } else {
         return <NavLink to="/login" className="text-white">Se connecter</NavLink>;
+        }
     }
 
     const loginNavPhone = () => {
         if (Cookies.get('pharminnov_login')) {
             return (<>
-            <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded" onClick={logout}>Se déconnecter</NavLink>
             <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Commandes</NavLink>
             <NavLink to="/dashboard" className="block text-white bg-emerald-800 px-4 py-2 rounded">Tableau de bord</NavLink>
             <NavLink to="/profil" className="block text-white bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
-
             </>)
         }
         return <NavLink to="/login" className="block text-white bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink>
