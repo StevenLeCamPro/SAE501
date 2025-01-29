@@ -11,12 +11,16 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/legacy/build/
 
 
 export const handleValidateCommande = async (commandeId, setCommandes) => {
+
     try {
-        await Api("commande/validate", "post", commandeId, null);
-        console.log('Commande validée avec succès. Stock mis à jour.');
-        setCommandes((prevCommandes) => prevCommandes.filter((commande) => commande.id !== commandeId));
+        const result = await Api("commande/validate", "post", commandeId, null);   
+        console.log(result)
+            alert(result.message);
+            if (result.goofyasfuck) {
+            setCommandes((prevCommandes) => prevCommandes.filter((commande) => commande.id !== commandeId));
+        }
     } catch (err) {
-        console.error('Erreur lors de la validation de la commande.', err);
+        alert(err);
     }
 };
 

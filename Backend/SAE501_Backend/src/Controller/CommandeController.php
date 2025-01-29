@@ -163,7 +163,7 @@ class CommandeController extends AbstractController
            $commande = $this->em->getRepository(Commande::class)->find($id);
 
            if (!$commande) {
-               return new JsonResponse(['message' => 'Commande non trouvée.'], 404);
+               return new JsonResponse(['message' => 'Commande non trouvée.']);
            }
 
            // Vérifier les stocks et mettre à jour
@@ -182,14 +182,13 @@ class CommandeController extends AbstractController
                    // Vérifier si la quantité demandée est disponible en tenant compte du stock de sécurité
                    $stockSecurite = 10;
                    if ($med['quantite'] > ($stockActuel - $stockSecurite)) {
-                       $this->addFlash('error', "Stock insuffisant pour le médicament: {$med['Nom']}. Disponible: {$stockActuel}, demandé: {$med['quantite']}, stock de sécurité: {$stockSecurite}");
-                       throw new \Exception("Stock insuffisant pour le médicament: {$med['Nom']}. Disponible: {$stockActuel}, demandé: {$med['quantite']}, stock de sécurité: {$stockSecurite}");
+                       return new JsonResponse(["message" => "Stock insuffisant pour le médicament: {$med['Nom']}. Disponible: {$stockActuel}, demandé: {$med['quantite']}, stock de sécurité: {$stockSecurite}. Veuillez réessayer ultérieurement."]);
                    }
 
                    // Réduire le stock du médicament
                    $medicament->setStock($stockActuel - $med['quantite']);
                } else {
-                   throw new \Exception("Médicament non trouvé: {$med['Nom']}");
+                   return new JsonResponse(["message" => "Médicament non trouvé: {$med['Nom']}"]);
                }
            }
 
@@ -200,7 +199,7 @@ class CommandeController extends AbstractController
            $this->em->remove($commande);
            $this->em->flush();
            $this->addFlash('success','Commande validée avec succès.');
-           return new JsonResponse(['message' => 'Commande validée avec succès.']);
+           return new JsonResponse(['message' => 'Commande validée avec succès.', 'goofyasfuck' => 1], 200);
            
        } catch (\Exception $e) {
            $this->logger->error('Erreur lors de la validation de la commande : ' . $e->getMessage());

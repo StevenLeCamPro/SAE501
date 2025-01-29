@@ -130,7 +130,7 @@ class ProduitController extends AbstractController
                     'imageId' => $imageId,
                     'prix' => $produit->getPrix(),
                     'dosage' => $produit->getDosage(),
-                    'stock' => $produit->getStock() <= 10 ? 'insuffisant' : $produit->getStock(),
+                    'stock' => $produit->getStock() <= 10 ? '0' : $produit->getStock(),
                     'categorie' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getId())->toArray(),
                     'categorieName' => $produit->getCategorie()->map(fn(Categorie $categorie) => $categorie->getNom())->toArray()
                 ];

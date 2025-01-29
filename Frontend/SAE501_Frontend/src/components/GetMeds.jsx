@@ -42,6 +42,14 @@ function GetMeds() {
         setSelectedCategorie(event.target.value);
     };
 
+    const produitStock = (stock) => {
+        if (stock > 10) {
+            return <p className="flex text-base xl:text-xl"><img src="stock.svg" alt="stock" className="h-6 xl:h-8" />{stock} en stock</p>;
+        } else {
+            return <p className="flex text-base font-bold xl:text-xl text-red-500"><img src="stock.svg" alt="stock" className="h-6 xl:h-8 text-red-500" />Indisponible</p>;
+        }
+    }
+
     const filteredProduits = selectedCategorie
         ? produits.filter(produit => produit.categorie == selectedCategorie)
         : produits;
@@ -72,13 +80,11 @@ function GetMeds() {
                                     <p className="text-base xl:text-xl">{produit.dosage}</p>
                                 </div>
                                 <div>
-                                    <p className="font-bold text-lg xl:text-2xl">{produit.prix} €</p>
+                                    <p className="text-right font-bold text-lg xl:text-2xl">{produit.prix} €</p>
+                                    {produitStock(produit.stock)}
                                 </div>
                             </div>
-                            <div className="flex justify-between items-center px-4">
-                                <p className="flex text-base xl:text-xl"><img src="stock.svg" alt="stock" className="h-6 xl:h-8" />Disponible</p>
-                                <p className="text-base xl:text-xl">Stock : {produit.stock}</p>
-                            </div>
+                           
                             <div className="text-center my-4 xl:mt-10">
                                 <button className="bg-emerald-600 text-white px-4 py-4 rounded-md text-base xl:text-2xl"><NavLink to={`/medsbyid?id=${produit.id}`}>Voir les détails</NavLink></button>
                             </div>
