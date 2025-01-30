@@ -15,8 +15,6 @@ class Commande
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $patientName = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -33,6 +31,10 @@ class Commande
     #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'commande')]
     private Collection $products;
 
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $userId = null;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -43,17 +45,6 @@ class Commande
         return $this->id;
     }
 
-    public function getPatientName(): ?string
-    {
-        return $this->patientName;
-    }
-
-    public function setPatientName(string $patientName): static
-    {
-        $this->patientName = $patientName;
-
-        return $this;
-    }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -117,6 +108,18 @@ class Commande
                 $product->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserId(): ?User
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?User $userId): static
+    {
+        $this->userId = $userId;
 
         return $this;
     }

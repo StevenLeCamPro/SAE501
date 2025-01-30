@@ -3,14 +3,17 @@ import Api from "./Api";
 import { useEffect, useState } from "react";
 import roleValidator from "./CookieValidator";
 import { handleValidateCommande, handleDeleteCommande } from './CommandeUpload';
+import Cookies from 'js-cookie';
 
 function CommandeGet() {
     const [commandes, setCommandes] = useState([]); // Initialisation avec un tableau vide
     const navigate = useNavigate();
+    const userCookie = Cookies.get("pharminnov_login");
+    const { user_id } = JSON.parse(userCookie);
 
     const fetchCommandes = async () => {
         try {
-            const result = await Api("commande", "get", null, null);
+            const result = await Api("commande/userid", "get", user_id, null);
             setCommandes(Array.isArray(result) ? result : []); // Assurez que le résultat est un tableau
         } catch (error) {
             console.error("Error fetching commandes:", error);

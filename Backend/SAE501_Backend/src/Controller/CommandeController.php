@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Commande;
 use App\Entity\Medicament;
 use App\Entity\Produit;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,8 +21,8 @@ class CommandeController extends AbstractController
     public function __construct(private EntityManagerInterface $em, private LoggerInterface $logger) {}
 
     // Route pour créer une commande à partir du texte de l'ordonnance
-    #[Route('/post', methods: ['POST'])]
-    public function createCommande(Request $request): JsonResponse
+    #[Route('/{id}/post', methods: ['POST'])]
+    public function createCommande(Request $request, $id): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -53,7 +54,9 @@ class CommandeController extends AbstractController
             }
 
             $commande = new Commande();
-            $commande->setPatientName('Patient inconnu');
+
+            $user = $this->em->getRepository(User::class)->find($id);
+            $commande->setUserId($user);
             $commande->setCreatedAt(new \DateTimeImmutable());
 
             $quantitesMeds = []; // Tableau pour stocker les quantités des médicaments
@@ -125,7 +128,24 @@ class CommandeController extends AbstractController
      foreach ($commandes as $commande) {
          $data[] = [
              'id' => $commande->getId(),
-             'patient' => $commande->getPatientName(),
+             'quantites' => $commande->getQuantite(),
+             'prix_total' => $commande->getPrixTotal(),
+             // Ajoutez ici d'autres informations si nécessaire
+         ];
+     }
+
+     return new JsonResponse($data);
+ }
+
+ #[Route('/userid/{id}/get', methods: ['GET'])]
+ public function getCommandeByUserId(Request $request, $id): JsonResponse
+ {
+     $commandes = $this->em->getRepository(Commande::class)->findBy(['userId' => $id]);
+        $data = [];
+ 
+     foreach ($commandes as $commande) {
+         $data[] = [
+             'id' => $commande->getId(),
              'quantites' => $commande->getQuantite(),
              'prix_total' => $commande->getPrixTotal(),
              // Ajoutez ici d'autres informations si nécessaire

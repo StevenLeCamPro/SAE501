@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 import Tesseract from 'tesseract.js';
 import Api from './Api';
+import Cookies from 'js-cookie';
 // Définir le chemin vers le worker pour pdf.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs';
 // le but du worker est de relayer les fonctions gourmandes dans un traitement 
@@ -96,8 +97,11 @@ function CommandeUpload() {
     
                     const fullText = extractedTexts.join("\n"); // Concatène tous les textes extraits
                     console.log("Texte extrait complet :", fullText); // Log le texte complet extrait
-    
-                    const response = await Api("commande", "post", null, { text: fullText }); // Envoie le texte extrait à l'API
+
+                    const userCookie = Cookies.get("pharminnov_login");
+                    const { user_id } = JSON.parse(userCookie);
+                        
+                    const response = await Api("commande", "post", user_id, { text: fullText }); // Envoie le texte extrait à l'API
                     setMedicaments(response.medicaments); // Met à jour les médicaments avec la réponse de l'API
                     setCommandeId(response.commandeId); // Met à jour l'ID de la commande avec la réponse de l'API
                     setSuccessMessage("Demande traitée avec succès."); // Affiche un message de succès
