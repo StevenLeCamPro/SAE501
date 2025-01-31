@@ -62,7 +62,7 @@ function TestApiPost() {
             const result = await Api("user", "post", null, data);
             console.log("API Response:", result);
             alert("Votre compte a bien été créé");
-            navigate("/");
+            navigate("/login");
         } catch (error) {
             console.error("Erreur pendant la création de votre compte :", error);
             alert("Erreur pendant la création de votre compte");

@@ -24,6 +24,7 @@ import CommandeGet from './components/CommandeGet.jsx'
 import PostMedPdf from './components/PostMedPdf.jsx'
 import DashboardUser from './pages/DashboardUser.jsx'
 import Profile from './components/Profile.jsx'
+import DashboardCommande from './pages/DashboardCommande.jsx'
 
 const router = createBrowserRouter(
   [
@@ -110,6 +111,10 @@ const router = createBrowserRouter(
         {
           path: "/profil",
           element: <Profile />
+        },
+        {
+          path: "/dashboard/commande",
+          element: <DashboardCommande />
         }
 
       ]

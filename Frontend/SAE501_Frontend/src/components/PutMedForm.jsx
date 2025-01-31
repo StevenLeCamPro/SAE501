@@ -162,6 +162,7 @@ function UpdateProduit() {
                 const result = await Api("produit", "put", id, data);
                 console.log("API Response:", result);
                 alert("Le produit a bien été modifié");
+                navigate("/dashboard");
             } catch (error) {
                 console.error("Erreur pendant la modification du produit :", error);
                 alert("Erreur pendant la modification du produit");

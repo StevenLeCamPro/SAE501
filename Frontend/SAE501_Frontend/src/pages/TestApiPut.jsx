@@ -65,7 +65,7 @@ function TestApiPut() {
       const result = await Api("user", "put", id, dataUser);
       console.log("API Response:", result);
       alert("L'utilisateur a bien été modifié");
-      navigate("/dashboard");
+      navigate("/profil");
       
     } catch (error) {
       console.error("Erreur pendant la modification de l'utilisateur :", error);
@@ -212,7 +212,7 @@ function TestApiPut() {
                       type="submit"
                       className="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white"
                     >
-                      Modifier le médicament
+                      Modifier l'utilisateur
                     </button>
                   </div>
                 </form>

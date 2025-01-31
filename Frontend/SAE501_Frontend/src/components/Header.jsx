@@ -17,7 +17,7 @@ function Header() {
         if (roleAccess === 2) {
             return (
                 <>
-                    <NavLink to="/commande/liste" className="text-white">Commandes</NavLink>
+                    <NavLink to="/commande/liste" className="text-white">Mes Commandes</NavLink>
                     <NavLink to="/dashboard" className="text-white">Tableau de bord</NavLink>
                     <NavLink to="/profil" className="text-white">Profil</NavLink>
                 </>
@@ -25,24 +25,42 @@ function Header() {
         } else if (roleAccess === 1) {
             return (
                 <>
-                    <NavLink to="/commande/liste" className="text-white">Commandes</NavLink>
+                    <NavLink to="/commande/liste" className="text-white">Mes Commandes</NavLink>
                     <NavLink to="/profil" className="text-white">Profil</NavLink>
                 </>
             );
         } else {
-        return <NavLink to="/login" className="text-white">Se connecter</NavLink>;
+        return (
+        <>
+        <NavLink to="/login" className="text-white">Se connecter</NavLink>
+        <NavLink to="/register" className="text-white">S'inscrire</NavLink>
+        </>
+        );
         }
     }
 
     const loginNavPhone = () => {
-        if (Cookies.get('pharminnov_login')) {
+        const roleAccess = useCheckRole(2);
+        if (roleAccess === 2) {
+       
             return (<>
-            <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Commandes</NavLink>
+            <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Mes Commandes</NavLink>
             <NavLink to="/dashboard" className="block text-white bg-emerald-800 px-4 py-2 rounded">Tableau de bord</NavLink>
             <NavLink to="/profil" className="block text-white bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
             </>)
+        }else if (roleAccess === 1) {
+            return (<>
+            <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Mes Commandes</NavLink>
+            <NavLink to="/profil" className="block text-white bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
+            </>)
+        } else {
+        return (
+            <>
+        <NavLink to="/login" className="block text-white bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink>
+        <NavLink to="/register" className="block text-white bg-emerald-800 px-4 py-2 rounded">S'inscrire</NavLink>
+        </>
+        );
         }
-        return <NavLink to="/login" className="block text-white bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink>
     }
 
     return (
@@ -86,7 +104,6 @@ function Header() {
                         <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded">Accueil</NavLink>
                         <NavLink to="/medicaments" className="block text-white bg-emerald-800 px-4 py-2 rounded">Médicaments</NavLink>
                         <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded">Visite Virtuelle</NavLink>
-                        {/* <NavLink to="/login" className="block text-white bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink> */}
                         {loginNavPhone()}
                     </div>
                 )}

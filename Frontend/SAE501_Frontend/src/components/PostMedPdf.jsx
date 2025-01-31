@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 import Tesseract from 'tesseract.js';
 import Api from './Api';
+import { useNavigate } from 'react-router-dom';
 // Définir le chemin vers le worker pour pdf.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs';
 // le but du worker est de relayer les fonctions gourmandes dans un traitement 
@@ -15,6 +16,8 @@ function PostMedPdf() {
     const [error, setError] = useState(null); // État pour les erreurs
     const [file, setFile] = useState(); // État pour le fichier sélectionné
     const [successMessage, setSuccessMessage] = useState(null); // Message de succès
+
+    const navigate = useNavigate();
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]); // Met à jour le fichier sélectionné
@@ -71,6 +74,9 @@ function PostMedPdf() {
             // Envoi à l'API Symfony
             const response = await Api("produit/pdf", "post", null, { text: fullText }); // Envoie le texte extrait à l'API
             setSuccessMessage("Demande traitée avec succès."); // Affiche un message de succès
+            setTimeout(() => {
+                navigate(`/dashboard`); // Redirige l'utilisateur vers la page de la commande après 0,5 seconde
+            }, 500); // Redirige vers la page des produits après 0,5 secondes
         } catch (err) {
             console.error("Erreur :", err); // Affiche l'erreur dans la console
             setError("Erreur lors du traitement du fichier PDF."); // Affiche un message d'erreur

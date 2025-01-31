@@ -3,6 +3,7 @@ import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 import Tesseract from 'tesseract.js';
 import Api from './Api';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 // Définir le chemin vers le worker pour pdf.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs';
 // le but du worker est de relayer les fonctions gourmandes dans un traitement 
@@ -42,6 +43,8 @@ function CommandeUpload() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [commandeId, setCommandeId] = useState(null);
     const [medicaments, setMedicaments] = useState([]);
+
+    const navigate = useNavigate();
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -105,6 +108,10 @@ function CommandeUpload() {
                     setMedicaments(response.medicaments); // Met à jour les médicaments avec la réponse de l'API
                     setCommandeId(response.commandeId); // Met à jour l'ID de la commande avec la réponse de l'API
                     setSuccessMessage("Demande traitée avec succès."); // Affiche un message de succès
+                    setTimeout(() => {
+                        navigate(`/commande/liste`); // Redirige l'utilisateur vers la page de la commande après 0,5 seconde
+                    }, 500);
+                   
                 } catch (extractionError) {
                     console.error("Erreur pendant l'extraction : ", extractionError); // Log l'erreur d'extraction
                     setError("Une erreur est survenue lors de l’analyse du fichier."); // Affiche un message d'erreur

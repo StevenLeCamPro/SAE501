@@ -130,6 +130,9 @@ class CommandeController extends AbstractController
              'id' => $commande->getId(),
              'quantites' => $commande->getQuantite(),
              'prix_total' => $commande->getPrixTotal(),
+             'userName' => $commande->getUserId()->getName(),
+             'userFirstName' => $commande->getUserId()->getFirstName(),
+
              // Ajoutez ici d'autres informations si nécessaire
          ];
      }
