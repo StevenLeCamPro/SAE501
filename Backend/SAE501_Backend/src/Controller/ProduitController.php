@@ -214,10 +214,16 @@ class ProduitController extends AbstractController
 
             if (isset($data['categorie'])) {
                 $categories = is_array($data['categorie']) ? $data['categorie'] : [$data['categorie']];
-            
+                
+                
+                foreach ($produit->getCategorie() as $existingCategory) {
+                    $produit->getCategorie()->removeElement($existingCategory);
+                }
+
+                // Add new categories
                 foreach ($categories as $categorieId) {
                     $category = $em->getRepository(Categorie::class)->find($categorieId);
-                    if ($category && !$produit->getCategorie()->contains($category)) {
+                    if ($category) {
                         $produit->getCategorie()->add($category);
                     }
                 }

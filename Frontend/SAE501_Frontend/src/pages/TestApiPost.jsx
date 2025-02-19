@@ -15,6 +15,21 @@ function TestApiPost() {
 
     const navigate = useNavigate();
 
+    const validateBirthDate = (birthDate) => {
+        const today = new Date();
+        const birth = new Date(birthDate);
+
+        if (birth > today){
+            return "La date de naissance ne peut pas être dans le futur";
+        }
+
+        const age = today.getFullYear() - birth.getFullYear();
+       
+        if (age < 16){
+            return "vous devez être agé d'au moins 16 ans pour vous inscrire";
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -54,9 +69,17 @@ function TestApiPost() {
             alert("Veuillez entrer votre date de naissance");
             return
         }
+
+        const birthDateError = validateBirthDate(birthDate);
+    if (birthDateError) {
+        alert(birthDateError);
+        return;
+    }
         const data = { name, email, password, confirmPassword, firstName, phone, address, birthDate };
 
         console.log(data)
+
+        
 
         try {
             const result = await Api("user", "post", null, data);
@@ -120,7 +143,7 @@ function TestApiPost() {
                                 <label for="confirmPassword" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Confirmer le mot de passe</label>
                             </div>
                             <div class="col-span-2 my-6 text-center">
-                                <button type="submit" class="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white ">Créer un compte</button>
+                                <button type="submit" class="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white" >Créer un compte</button>
                                 <p className="text-center text-sm text-gray-500">
                                     Déjà un compte ? <a href="/login" className="text-emerald-600 hover:underline">Se connecter</a>
                                 </p>                            
