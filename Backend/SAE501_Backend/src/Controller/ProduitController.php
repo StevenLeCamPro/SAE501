@@ -18,17 +18,29 @@ class ProduitController extends AbstractController
     public function CreateProduit(Request $request, EntityManagerInterface $em): Response
     {
         $data = json_decode($request->getContent(), true);
-        $produit = new Produit();
+        
+        // Extract variables from data
+        $nom = $data['nom'];
+        $dosage = $data['dosage'];
 
-        if (!$produit){
-        $produit->setNom($data['nom']);
-        $produit->setDescription($data['description']);
-        $produit->setPrix($data['prix']);
-        $produit->setDosage($data['dosage']);
-        $produit->setStock($data['stock']);
-        }else{
+        // Check if the product already exists
+        $existing = $em->getRepository(Produit::class)->findOneBy([
+            'Nom' => $nom,
+            'dosage' => $dosage
+        ]);
+
+        if ($existing) {
             return $this->json(['message' => 'Un produit avec le même nom et le même dosage existe déjà'], Response::HTTP_BAD_REQUEST);
+        }else{
+            $produit = new Produit();
+            $produit->setNom($data['nom']);
+            $produit->setDescription($data['description']);
+            $produit->setPrix($data['prix']);
+            $produit->setDosage($data['dosage']);
+            $produit->setStock($data['stock']);
         }
+
+       
 
         foreach ($data['categorie'] as $categorieId) {
             $category = $em->getRepository(Categorie::class)->find($categorieId);
