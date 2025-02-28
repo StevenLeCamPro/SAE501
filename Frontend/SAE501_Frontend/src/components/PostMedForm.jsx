@@ -5,10 +5,6 @@ import PostMedPdf from "./PostMedPdf";
 
 
 function PostMedForm() {
-   
-
-
-
     const [nom, setNom] = useState("");
     const [description, setDescription] = useState("");
     const [prix, setPrix] = useState(0);
@@ -90,22 +86,17 @@ function PostMedForm() {
                     console.log("Upload successful:", result);
 
                     imageId = result.id;
-                    // fetchDatabaseImages();
-
-                    // console.log(databaseImages)
-
-                    // const lastImage = databaseImages.slice(-1)[0];
-                    // imageId = lastImage ? lastImage.id : null;
 
                     const dataMed = { nom, description, prix, categorie, imageId, stock, dosage };
 
-                    console.log(dataMed)
+                    console.log(dataMed);
 
                     try {
                         const result = await Api("produit", "post", null, dataMed);
                         console.log("API Response:", result);
                         alert("Le produit a bien été créé");
                         fetchDatabaseImages();
+                        navigate("/dashboard");
                     } catch (error) {
                         console.error("Erreur pendant la création du produit :", error);
                         alert("Erreur pendant la création du produit");
@@ -123,9 +114,13 @@ function PostMedForm() {
             console.log(data)
 
             try {
+               
                 const result = await Api("produit", "post", null, data);
                 console.log("API Response:", result);
                 alert("Le produit a bien été créé");
+                setTimeout(() => {
+                    navigate(`/dashboard`); // Redirige l'utilisateur vers la page du dashboard des médicaments après 0,5 seconde
+                }, 500);
             } catch (error) {
                 console.error("Erreur pendant la création du produit :", error);
                 alert("Erreur pendant la création du produit");

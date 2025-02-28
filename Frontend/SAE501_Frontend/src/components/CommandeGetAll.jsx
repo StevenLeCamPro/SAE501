@@ -3,17 +3,16 @@ import Api from "./Api";
 import { useEffect, useState } from "react";
 import roleValidator from "./CookieValidator";
 import { handleValidateCommande, handleDeleteCommande } from './CommandeUpload';
-import Cookies from 'js-cookie';
 
-function CommandeGet() {
+
+function CommandeGetAll() {
     const [commandes, setCommandes] = useState([]); // Initialisation avec un tableau vide
     const navigate = useNavigate();
-    const userCookie = Cookies.get("pharminnov_login");
-    const { user_id } = JSON.parse(userCookie);
+    
 
     const fetchCommandes = async () => {
         try {
-            const result = await Api("commande/userid", "get", user_id, null);
+            const result = await Api("commande", "get", null, null);
             setCommandes(Array.isArray(result) ? result : []); // Assurez que le résultat est un tableau
         } catch (error) {
             console.error("Error fetching commandes:", error);
@@ -39,10 +38,10 @@ function CommandeGet() {
     return (
         <div className="bg-orange-100 pb-10">
             <h1 className="text-center font-bold text-2xl py-10 xl:text-4xl">Liste des commandes</h1>
-            <div className="text-center">
-            <NavLink to={`/commande/create`} className="w-full sm:w-auto bg-emerald-500 text-white font-bold py-2 px-4 text-center rounded hover:bg-emerald-600 transition duration-300">
+            <div>
+            {/* <NavLink to={`/commande/create`} className="w-full sm:w-auto bg-emerald-500 text-white font-bold py-2 px-4 text-center rounded hover:bg-emerald-600 transition duration-300">
                 Ajouter une commande 
-            </NavLink>
+            </NavLink> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 p-6 mb-8">
 
@@ -52,9 +51,10 @@ function CommandeGet() {
                         <div className="border-2 border-emerald-600 rounded-md bg-white shadow-lg p-4 mb-8" key={index}>
                             <div className="px-4 text-center">
                                 <p className="font-bold  text-lg xl:text-2xl">Commande #{commande.id}</p>
+                                <p className="text-base xl:text-xl"><span className="font-bold">Nom du client :</span> {commande.userName} {commande.userFirstName}</p>
                                 
                             </div>
-                            <div className="px-4 my-4">
+                            <div className="px-4 my-4 text-left">
                                
                                 <p className="text-base xl:text-xl"><span className="font-bold">Produits :</span></p>
                                 <ul className="list-disc pl-8 text-base xl:text-xl">
@@ -73,7 +73,7 @@ function CommandeGet() {
 
                                 </ul>
                             </div>
-                            <p className="text-base xl:text-xl"><span className="font-bold">Prix total :</span> {commande.prix_total ? commande.prix_total.toFixed(2) : 'Non calculé'} €</p>
+                            <p className="text-base text-left xl:text-xl"><span className="font-bold">Prix total :</span> {commande.prix_total ? commande.prix_total.toFixed(2) : 'Non calculé'} €</p>
                             <div className="flex justify-around my-4 xl:mt-10">
                                 
         <button onClick={() => handleValidateCommande(commande.id, setCommandes)} className="bg-emerald-600 text-white px-4 py-4 rounded-md text-base xl:text-xl">Valider</button>
@@ -90,4 +90,4 @@ function CommandeGet() {
     );
 }
 
-export default CommandeGet;
+export default CommandeGetAll;

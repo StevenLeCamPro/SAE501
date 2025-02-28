@@ -20,11 +20,15 @@ class ProduitController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $produit = new Produit();
 
+        if (!$produit){
         $produit->setNom($data['nom']);
         $produit->setDescription($data['description']);
         $produit->setPrix($data['prix']);
         $produit->setDosage($data['dosage']);
         $produit->setStock($data['stock']);
+        }else{
+            return $this->json(['message' => 'Un produit avec le même nom et le même dosage existe déjà'], Response::HTTP_BAD_REQUEST);
+        }
 
         foreach ($data['categorie'] as $categorieId) {
             $category = $em->getRepository(Categorie::class)->find($categorieId);
@@ -210,10 +214,16 @@ class ProduitController extends AbstractController
 
             if (isset($data['categorie'])) {
                 $categories = is_array($data['categorie']) ? $data['categorie'] : [$data['categorie']];
-            
+                
+                
+                foreach ($produit->getCategorie() as $existingCategory) {
+                    $produit->getCategorie()->removeElement($existingCategory);
+                }
+
+                // Add new categories
                 foreach ($categories as $categorieId) {
                     $category = $em->getRepository(Categorie::class)->find($categorieId);
-                    if ($category && !$produit->getCategorie()->contains($category)) {
+                    if ($category) {
                         $produit->getCategorie()->add($category);
                     }
                 }
