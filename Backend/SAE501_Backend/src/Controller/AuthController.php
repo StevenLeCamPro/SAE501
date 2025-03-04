@@ -42,7 +42,7 @@ class AuthController extends AbstractController
         $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
 
         if (!$user || !$passwordHasher->isPasswordValid($user, $password)) {
-            return $this->json(['error' => 'Invalid credentials'], 401);
+            return $this->json(['error' => 'Votre email ou mot de passe est incorrect'], 401);
         }
 
         $token = bin2hex(random_bytes(32));

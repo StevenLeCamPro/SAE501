@@ -2,12 +2,14 @@ import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GetCookieInfo from './ReadCookie';
+import { useFlashMessage } from '../context/FlashMessageContext';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+    const { message, addFlashMessage } = useFlashMessage();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -34,8 +36,10 @@ function Login() {
                 console.log('Login successful!');
                 GetCookieInfo();
 
-                alert("Connexion réussie !");
-                navigate('/');
+                addFlashMessage("Connexion réussie !");
+                setTimeout(() => {
+                    navigate('/');
+                }, 1000);
             } else {
                 setErrorMessage(data.error || "Connexion échouée. Veuillez réessayer.");
             }
@@ -46,9 +50,18 @@ function Login() {
     };
 
     return (
-        <div className="bg-orange-100 flex items-center justify-center">
+        
+        <div className="bg-orange-100 flex flex-col items-center justify-center">
+            {message &&  
+                <div className="absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
+                {message}
+            </div>
+                }
+             
             <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
+            
                 <div className="absolute inset-0 bg-black opacity-65"></div>
+               
                 <div className="relative mx-auto my-20 w-full max-w-sm bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10">
                     <div className="text-center">
                         <h1 className="text-3xl font-semibold text-gray-900">Connexion</h1>

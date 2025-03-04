@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Api from "./Api";
 import { useEffect, useState } from "react";
 import roleValidator from "./CookieValidator";
-import { handleValidateCommande, handleDeleteCommande } from './CommandeUpload';
+// import { handleValidateCommande, handleDeleteCommande } from './CommandeUpload';
 
 
 function CommandeGetAll() {

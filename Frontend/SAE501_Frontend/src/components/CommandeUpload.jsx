@@ -11,31 +11,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/legacy/build/
 // cela permet d'améliorer les performanes, 
 // et de répartir la charge de travail, comme son nom l'indique.
 
-
-export const handleValidateCommande = async (commandeId, setCommandes) => {
-
-    try {
-        const result = await Api("commande/validate", "post", commandeId, null);   
-        console.log(result)
-            alert(result.message);
-            if (result.goofyasfuck) {
-            setCommandes((prevCommandes) => prevCommandes.filter((commande) => commande.id !== commandeId));
-        }
-    } catch (err) {
-        alert(err);
-    }
-};
-
-export const handleDeleteCommande = async (commandeId, setCommandes) => {
-    try {
-        await Api("commande", "delete", commandeId, null);
-        console.log('Commande supprimée avec succès.');
-        setCommandes((prevCommandes) => prevCommandes.filter((commande) => commande.id !== commandeId));
-    } catch (err) {
-        console.error('Erreur lors de la suppression de la commande.', err);
-    }
-};
-
 function CommandeUpload() {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
