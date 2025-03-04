@@ -53,7 +53,7 @@ function Login() {
         
         <div className="bg-orange-100 flex flex-col items-center justify-center">
             {message &&  
-                <div className="absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
+                <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
                 {message}
             </div>
                 }

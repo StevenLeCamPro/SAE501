@@ -4,7 +4,7 @@ function Footer() {
 
     return(
         <>
-        <div className="bg-emerald-600">
+        <div className="bg-emerald-600 bottom-0 w-full">
             <footer className="text-white text-center py-4">
                 <p>&copy; 2024 PharmInnov. Tous droits réservés.</p>
                 <div className="flex justify-center space-x-4 mt-2">

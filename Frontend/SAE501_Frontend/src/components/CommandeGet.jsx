@@ -28,12 +28,14 @@ function CommandeGet() {
         try {
             const result = await Api("commande/validate", "post", commandeId, null);
             console.log(result);
-            if (result.success) {
-                addFlashMessage("Commande validée avec succès.", "success");
+            
+            if (result.good){
                 setCommandes((prevCommandes) => prevCommandes.filter((commande) => commande.id !== commandeId));
-            } else {
-                addFlashMessage(result.message || "Erreur lors de la validation de la commande.", "error");
+                addFlashMessage("Commande validée avec succès.", "success");   
+            }else{
+            addFlashMessage(result.message || "Erreur lors de la validation de la commande.", "error");
             }
+
         } catch (err) {
             console.error("Erreur lors de la validation de la commande", err);
             addFlashMessage("Erreur lors de la validation de la commande.", "error");
@@ -68,13 +70,13 @@ function CommandeGet() {
     }, [navigate]);
 
     return (
-        <div className="bg-orange-100 pb-10">
+        <div className="bg-orange-100 pb-10 min-h-[80vh]">
             {message &&  
-                <div className="absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
+                <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
                 {message}
             </div>
                 }
-            <h1 className="text-center font-bold text-2xl py-10 xl:text-4xl">Liste des commandes</h1>
+            <h1 className="text-center font-bold text-2xl lg:pt-12 py-10 xl:text-4xl">Liste des commandes</h1>
             <div className="text-center">
                 <NavLink to={`/commande/create`} className="w-full sm:w-auto bg-emerald-500 text-white font-bold py-2 px-4 text-center rounded hover:bg-emerald-600 transition duration-300">
                     Ajouter une commande

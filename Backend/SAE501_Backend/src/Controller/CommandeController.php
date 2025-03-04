@@ -222,7 +222,7 @@ class CommandeController extends AbstractController
            $this->em->remove($commande);
            $this->em->flush();
            $this->addFlash('success','Commande validée avec succès.');
-           return new JsonResponse(['message' => 'Commande validée avec succès.', 'goofyasfuck' => 1], 200);
+           return new JsonResponse(['message' => 'Commande validée avec succès.', 'good' => 1], 200);
            
        } catch (\Exception $e) {
            $this->logger->error('Erreur lors de la validation de la commande : ' . $e->getMessage());
