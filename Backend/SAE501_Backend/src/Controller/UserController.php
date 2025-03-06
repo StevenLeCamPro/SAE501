@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -66,7 +67,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}/put', name: 'edit_profile', methods: ['PUT'])]
-    public function editProfile(Request $request, EntityManagerInterface $em, $id): Response {
+    public function editProfile(Request $request, EntityManagerInterface $em, UserRepository $userRepository, $id): Response {
     
 
         $users = $em->getRepository(User::class)->find($id);
@@ -92,35 +93,25 @@ class UserController extends AbstractController
                 return $this->json(['message' => 'Le champ "email" est requis'], Response::HTTP_BAD_REQUEST);
             }
 
-            // if (!isset($data['confirmPassword'])) {
-            //     return $this->json(['message' => 'Le champs confirmation de mot de passe est obligatoire'], Response::HTTP_BAD_REQUEST);
-            // }
-
-            // if (isset($data['password'])) {
-            //     $users->setPassword($data['password']);
-            // } else {
-            //     return $this->json(['message' => 'Le champ "password" est requis'], Response::HTTP_BAD_REQUEST);
-            // }
-
-            // if ($data['password'] != $data['confirmPassword']) {
-            //     return $this->json(['message' => 'Le mot de passe est la confirmation de mot de passe ne correspondent pas'], Response::HTTP_BAD_REQUEST);
-            // }
-
-            if (isset($data['phone'])) {
-                $users->setPhone($data['phone']);
-            } else {
+        $existingUser = $userRepository->findOneBy(['email' => $data['email']]);
+        if ($existingUser && $existingUser->getId() !== $users->getId()) {
+            return new JsonResponse(['email' => 'L\'email est déjà utilisée', 'good' => 1], 200);
+        }
+        if (isset($data['phone'])) {
+            $users->setPhone($data['phone']);
+        } else {
                 return $this->json(['message' => 'Le champ "phone" est requis'], Response::HTTP_BAD_REQUEST);
-            }
-            if (isset($data['address'])) {
-                $users->setAddress($data['address']);
-            } else {
-                return $this->json(['message' => 'Le champ "address" est requis'], Response::HTTP_BAD_REQUEST);
-            }
+        }
+        if (isset($data['address'])) {
+            $users->setAddress($data['address']);
+        } else {
+            return $this->json(['message' => 'Le champ "address" est requis'], Response::HTTP_BAD_REQUEST);
+        }
             
             $em->persist($users);
             $em->flush();
 
-            return $this->json(['message' => 'user mis à jour avec succès'], Response::HTTP_OK);
+            return $this->json(['message' => 'L\'utilisateur a bien été modifié'], Response::HTTP_OK);
         }
 
         return $this->json(['message' => 'Pas de user trouvée'], Response::HTTP_NOT_FOUND);
@@ -136,7 +127,7 @@ class UserController extends AbstractController
 
         $existingUser = $userRepository->findOneBy(['email' => $data['email']]);
         if ($existingUser) {
-            return $this->json(['message' => 'L\'email est déjà utilisé'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['email' => 'L\'email est déjà utilisée'], 200);
         }
 
         $user = new User();
@@ -165,17 +156,17 @@ class UserController extends AbstractController
         $user = $em->getRepository(User::class)->find($id);
         $token = $em->getRepository(UserToken::class)->findOneBy(['User' => $user->getId()]);
 
+        if ($token) {
+            $em->remove($token);
+        }  
         if ($user) {
-            if ($token) {
-                $em->remove($token);
-            }
             
-            $em->remove($user);
+            $em->remove($user);    
             $em->flush();
 
-            return $this->json(['message' => 'Categorie supprimée avec succès'], Response::HTTP_OK);
+            return $this->json(['message' => 'Utilisateur supprimé avec succès'], Response::HTTP_OK);
         }
 
-        return $this->json(['message' => 'Pas de categorie trouvée'], Response::HTTP_NOT_FOUND);
+        return $this->json(['message' => 'Pas d\'utilisateur trouvé'], Response::HTTP_NOT_FOUND);
     }
 }

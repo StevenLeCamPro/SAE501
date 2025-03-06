@@ -18,7 +18,12 @@ class ProduitController extends AbstractController
     public function CreateProduit(Request $request, EntityManagerInterface $em): Response
     {
         $data = json_decode($request->getContent(), true);
-        
+
+        // Check if required fields are present
+        if (!isset($data['nom'], $data['description'], $data['prix'], $data['dosage'], $data['stock'], $data['categorie'])) {
+            return $this->json(['message' => 'Tous les champs requis doivent être remplis'], Response::HTTP_BAD_REQUEST);
+        }
+
         // Extract variables from data
         $nom = $data['nom'];
         $dosage = $data['dosage'];
@@ -31,7 +36,7 @@ class ProduitController extends AbstractController
 
         if ($existing) {
             return $this->json(['message' => 'Un produit avec le même nom et le même dosage existe déjà'], Response::HTTP_BAD_REQUEST);
-        }else{
+        } else {
             $produit = new Produit();
             $produit->setNom($data['nom']);
             $produit->setDescription($data['description']);
@@ -40,8 +45,6 @@ class ProduitController extends AbstractController
             $produit->setStock($data['stock']);
         }
 
-       
-
         foreach ($data['categorie'] as $categorieId) {
             $category = $em->getRepository(Categorie::class)->find($categorieId);
             if ($category) {
@@ -49,7 +52,7 @@ class ProduitController extends AbstractController
             }
         }
 
-        if ($data['imageId']) {
+        if (isset($data['imageId'])) {
             $image = $em->getRepository(Image::class)->find($data['imageId']);
             if ($image) {
                 $produit->setImage($image);
@@ -231,8 +234,6 @@ class ProduitController extends AbstractController
                 foreach ($produit->getCategorie() as $existingCategory) {
                     $produit->getCategorie()->removeElement($existingCategory);
                 }
-
-                // Add new categories
                 foreach ($categories as $categorieId) {
                     $category = $em->getRepository(Categorie::class)->find($categorieId);
                     if ($category) {
@@ -240,9 +241,6 @@ class ProduitController extends AbstractController
                     }
                 }
             }
-            
-            
-    
             if ($data['imageId']) {
                 $image = $em->getRepository(Image::class)->find($data['imageId']);
                 if ($image) {
@@ -259,7 +257,7 @@ class ProduitController extends AbstractController
         return $this->json(['message' => 'Pas de produit trouvé'], Response::HTTP_NOT_FOUND);
     }
 
-    #[Route('/produit/{id}/delete', name: 'delete_categorie_by_id', methods: ['DELETE'])]
+    #[Route('/produit/{id}/delete', name: 'delete_product_by_id', methods: ['DELETE'])]
     public function DeleteProduitById(EntityManagerInterface $em, $id): Response
     {
         $categorie = $em->getRepository(Produit::class)->find($id);

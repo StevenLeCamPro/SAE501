@@ -52,11 +52,13 @@ function Login() {
     return (
         
         <div className="bg-orange-100 flex flex-col items-center justify-center">
-            {message &&  
-                <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
-                {message}
+            {message && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white text-green-600 text-center p-5 font-semibold shadow-lg rounded-lg w-3/4 md:w-1/2 lg:w-1/3">
+      {message}
+      </div>
             </div>
-                }
+                )}
              
             <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
             

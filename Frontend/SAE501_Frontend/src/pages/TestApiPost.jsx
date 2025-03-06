@@ -98,11 +98,20 @@ function TestApiPost() {
         try {
             const result = await Api("user", "post", null, data);
             console.log("API Response:", result);
-            addFlashMessage("Votre compte a bien été créé");
-            navigate("/login");
+
+            if(result.email){
+                addFlashMessage(result.email || "Cette adresse email est déjà utilisée", "error");
+                return;
+            }else{
+                addFlashMessage("Votre compte a bien été créé", "success");
+            }
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
+            
         } catch (error) {
             console.error("Erreur pendant la création de votre compte :", error);
-            addFlashMessage("Erreur pendant la création de votre compte");
+            addFlashMessage(error || "Erreur pendant la création de votre compte", "error");
         }
 
 

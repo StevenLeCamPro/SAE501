@@ -88,14 +88,19 @@ function TestApiPut() {
     try {
       const result = await Api("user", "put", id, dataUser);
       console.log("API Response:", result);
-      addFlashMessage("L'utilisateur a bien été modifié");
+      if (result.email){
+        addFlashMessage(result.email || "Cet adresse email est déjà utilisée", result);
 
-      // setTimeout(() => {
-      // navigate("/profil");
-      // }, 2000);
+      }else{
+        addFlashMessage("L'utilisateur a bien été modifié");
+      }
+
+      setTimeout(() => {
+      navigate("/profil");
+      }, 2000);
     } catch (error) {
       console.error("Erreur pendant la modification de l'utilisateur :", error);
-      addFlashMessage("Erreur pendant la modification de l'utilisateur");
+      addFlashMessage(error.message);
     }
   };
 
@@ -129,7 +134,7 @@ function TestApiPut() {
 
   return (
     <>
-      <div className="bg-orange-100 min-h-screen flex items-center justify-center">
+      <div className="bg-orange-100 min-h-screen flex flex-col lg:flex-row items-center justify-center">
         {message && (
           <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
             {message}

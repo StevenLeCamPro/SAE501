@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import Api from "../components/Api";
 import TestApiDelete from "./TestApiDelete";
 import { NavLink } from "react-router-dom";
+import { useFlashMessage } from "../context/FlashMessageContext";
 
 function TestApiGet() {
   const [user, setUser] = useState([]);
+  const {message, addFlashMessage } = useFlashMessage();
 
   const fetchUser = async () => {
     try {
@@ -18,11 +20,14 @@ function TestApiGet() {
     try {
       // Appelle l'API pour supprimer l'utilisateur
       await Api("user", "delete", id, null);
+     
   
       // Met à jour l'état local pour exclure l'utilisateur supprimé
       setUser((prevUser) => prevUser.filter((user) => user.id !== id));
+      addFlashMessage("Utilisateur supprimé avec succès");
     } catch (error) {
       console.error("Error deleting user:", error);
+      addFlashMessage("Oups, il y a eu une erreur.");
     }
   };
 
@@ -31,7 +36,12 @@ function TestApiGet() {
   }, []);
 
   return (
-    <div className="bg-orange-100 pb-10">
+    <div className="bg-orange-100 pb-10 min-h-[80vh]">
+       {message &&  
+                <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
+                {message}
+            </div>
+                }
       <div className="p-6 overflow-scroll xl:overflow-hidden px-0">
         <h1 className="text-3xl font-semibold text-gray-900 mb-4">
           Liste des utilisateurs

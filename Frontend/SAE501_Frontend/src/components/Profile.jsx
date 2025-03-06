@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Api from "../components/Api";
 import { useNavigate, NavLink } from "react-router-dom";
+import { useFlashMessage } from "../context/FlashMessageContext";
 
 function Profile() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const {message, addFlashMessage} = useFlashMessage();
 
   useEffect(() => {
     const userCookie = Cookies.get("pharminnov_login");
@@ -31,7 +33,11 @@ function Profile() {
   const logout = () => {
     Cookies.remove("pharminnov_login");
     console.log("User logged out");
-    navigate("/");
+    addFlashMessage("Vous allez être déconnecté, veuillez patienter.", "success");
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+    
   };
 
   return (
@@ -39,7 +45,13 @@ function Profile() {
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/arriereplan.jpg')" }}
     >
+       {message && (
+          <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
+            {message}
+          </div>
+        )}
       <div className="relative flex items-center justify-center min-h-screen">
+     
         <div className="absolute inset-0 bg-black opacity-65"></div>
         {user ? (
           <div className="relative mx-auto max-w-md bg-white p-6 rounded-lg shadow-md">
@@ -105,7 +117,7 @@ function Profile() {
             </div>
           </div>
         ) : (
-          <p className="text-center text-gray-500">Chargement du profil...</p>
+          <p className="text-center text-gray-500 bg-white rounded-lg p-10">Chargement du profil...</p>
         )}
       </div>
     </div>

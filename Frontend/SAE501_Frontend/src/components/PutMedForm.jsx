@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Api from "./Api";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useFlashMessage } from "../context/FlashMessageContext";
 
 function UpdateProduit() {
 
@@ -21,6 +22,7 @@ function UpdateProduit() {
     const [databaseProduit, setDatabaseProduit] = useState([])
 
     const navigate = useNavigate();
+    const {message, addFlashMessage} = useFlashMessage();
 
     const fetchDatabaseCategories = async () => {
         try {
@@ -94,18 +96,22 @@ function UpdateProduit() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // if (!nom.trim()) {
-        //     alert("Veuillez entrer le nom du produit");
-        //     return;
-        // }
-        // if (!description.trim()) {
-        //     alert("Veuillez entrer la description du produit");
-        //     return
-        // }
-        // if (!prix.trim()) {
-        //     alert("Veuillez entrer le prix du produit");
-        //     return
-        // }
+        if (!nom.trim()) {
+            addFlashMessage("Veuillez entrer le nom du produit");
+            return;
+        }
+        if (!description.trim()) {
+            addFlashMessage("Veuillez entrer la description du produit");
+            return
+        }
+        if (!prix.trim() || parseFloat(prix) < 0) {
+            addFlashMessage("Veuillez entrer un prix valide supérieur à 0");
+            return;
+        }
+        if (!stock.trim() || parseInt(stock) < 0) {
+            addFlashMessage("Veuillez entrer un stock valide supérieur à 0");
+            return;
+        }
 
         let imageId = images;
 
@@ -125,14 +131,10 @@ function UpdateProduit() {
                     console.log("Upload successful:", result);
 
                     imageId = result.id
-
                     // await fetchDatabaseImages();
-
                     // console.log(databaseImages)
-
                     // const lastImage = databaseImages.slice(-1)[0];
                     // imageId = lastImage ? lastImage.id : null;
-
                     const dataMed = { nom, description, prix, categorie, imageId, dosage, stock };
 
                     console.log(dataMed)
@@ -140,15 +142,15 @@ function UpdateProduit() {
                     try {
                         const result = await Api("produit", "put", id, dataMed);
                         console.log("API Response:", result);
-                        alert("Le produit a bien été modifié");
+                        addFlashMessage("Le produit a bien été modifié");
                         fetchDatabaseImages();
                     } catch (error) {
                         console.error("Erreur pendant la modification du produit :", error);
-                        alert("Erreur pendant la modification du produit");
+                        addFlashMessage("Erreur pendant la modification du produit");
                     }
                 } catch (error) {
                     console.error("Erreur durant l'upload de l'image :", error);
-                    alert("Erreur durant l'upload de l'image. Vérifiez la console.");
+                    addFlashMessage("Erreur durant l'upload de l'image. Vérifiez la console.");
                 }
             };
 
@@ -161,11 +163,13 @@ function UpdateProduit() {
             try {
                 const result = await Api("produit", "put", id, data);
                 console.log("API Response:", result);
-                alert("Le produit a bien été modifié");
+                addFlashMessage("Le produit a bien été modifié");
+                setTimeout(() => {
                 navigate("/dashboard");
+            }, 1000);
             } catch (error) {
                 console.error("Erreur pendant la modification du produit :", error);
-                alert("Erreur pendant la modification du produit");
+                addFlashMessage("Erreur pendant la modification du produit");
             }
         }
     };
@@ -173,6 +177,11 @@ function UpdateProduit() {
     return (
         <>
             <div className="bg-orange-100 min-h-screen flex items-center justify-center">
+            {message && (
+          <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
+            {message}
+          </div>
+        )}
                 <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                     <div className="absolute inset-0 bg-black opacity-65"></div>
                     <div className="relative mx-auto my-20 w-5/6 lg:w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10">

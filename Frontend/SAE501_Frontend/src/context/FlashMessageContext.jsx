@@ -1,23 +1,34 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
-// Créer le contexte
 const FlashMessageContext = createContext();
 
-// Fournisseur du contexte
 export const FlashMessageProvider = ({ children }) => {
     const [message, setMessage] = useState(null);
     const [type, setType] = useState(null);
+    const location = useLocation();
 
     const addFlashMessage = (messageText, messageType) => {
         setMessage(messageText);
         setType(messageType);
 
-        // Fermer le message après un délai
+        // Bloquer le scroll
+        document.body.classList.add("overflow-hidden");
+
+        // Fermer après un délai
         setTimeout(() => {
             setMessage(null);
             setType(null);
-        }, 6000);  // Le message disparait après 5 secondes
+            document.body.classList.remove("overflow-hidden"); // Rétablir le scroll
+        }, 3000);
     };
+
+    // Effacer le message au changement de page
+    useEffect(() => {
+        setMessage(null);
+        setType(null);
+        document.body.classList.remove("overflow-hidden"); // Sécurité supplémentaire
+    }, [location.pathname]);
 
     return (
         <FlashMessageContext.Provider value={{ message, type, addFlashMessage }}>
@@ -26,7 +37,4 @@ export const FlashMessageProvider = ({ children }) => {
     );
 };
 
-// Hook personnalisé pour utiliser le contexte
-export const useFlashMessage = () => {
-    return useContext(FlashMessageContext);
-};
+export const useFlashMessage = () => useContext(FlashMessageContext);

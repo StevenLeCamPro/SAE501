@@ -1,6 +1,10 @@
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
 
 function CGV() {
+    useEffect(() => {
+        window.scrollTo({ top: 0 });
+    }, []);
     return (
         <>
             <div className="bg-orange-100 pb-10">

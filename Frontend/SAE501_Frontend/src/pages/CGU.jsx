@@ -1,5 +1,10 @@
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+
 function CGU() {
+    useEffect(() => {
+        window.scrollTo({ top: 0});
+    }, []);
     return (
         <div className="bg-orange-100 pb-10">
             <h1 className="text-center font-bold text-2xl py-10 lg:text-4xl">Conditions Générales d'Utilisation</h1>

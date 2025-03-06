@@ -44,13 +44,16 @@ function MedList() {
                 Nom
               </th>
               <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+               Dosage
+              </th>
+              <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Description
               </th>
               <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Stock
               </th>
               <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                Prix
+                Prix Unitaire
               </th>
               <th className="xl:text-xl text-nunito border-y border-gray-300 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
                 Catégorie
@@ -67,13 +70,16 @@ function MedList() {
                   {produit.nom}
                 </td>
                 <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
+                  {produit.dosage}
+                </td>
+                <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
                   {produit.description}
                 </td>
                 <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
                   {produit.stock}
                 </td>
                 <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
-                  {produit.prix} € unité
+                  {produit.prix} € 
                 </td>
                 <td className="xl:text-xl text-nunito border-y border-gray-300 p-4">
                   {produit.categorieName}

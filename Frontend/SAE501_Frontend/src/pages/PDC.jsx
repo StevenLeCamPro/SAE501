@@ -1,5 +1,9 @@
-import { NavLink } from "react-router-dom";
+import { NavLink} from "react-router-dom";
+import { useEffect } from "react";
 function PDC() {
+    useEffect(() => {
+        window.scrollTo({ top: 0});
+    }, []);
     return (
         <div className="bg-orange-100 pb-10">
             <h1 className="text-center font-bold text-2xl py-10 lg:text-4xl">Politique de Confidentialité</h1>

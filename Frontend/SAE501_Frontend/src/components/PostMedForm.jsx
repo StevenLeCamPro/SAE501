@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Api from "./Api";
 import { useNavigate } from "react-router-dom";
 import PostMedPdf from "./PostMedPdf";
+import {useFlashMessage} from "../context/FlashMessageContext";
 
 
 function PostMedForm() {
@@ -16,7 +17,11 @@ function PostMedForm() {
     const [dosage, setDosage] = useState("");
     const [databaseImages, setDatabaseImages] = useState([]);
 
+    const prixValue = parseFloat(prix);
+    const stockValue = parseInt(stock);
+
     const navigate = useNavigate();
+    const {message, addFlashMessage} = useFlashMessage();
 
     const fetchDatabaseCategories = async () => {
         try {
@@ -56,16 +61,20 @@ function PostMedForm() {
         e.preventDefault();
 
         if (!nom.trim()) {
-            alert("Veuillez entrer le nom du produit");
+            addFlashMessage("Veuillez entrer le nom du produit");
             return;
         }
         if (!description.trim()) {
-            alert("Veuillez entrer la description du produit");
+            addFlashMessage("Veuillez entrer la description du produit");
             return
         }
-        if (!prix.trim()) {
-            alert("Veuillez entrer le prix du produit");
-            return
+        if (isNaN(prixValue) || prixValue <= 0) {
+            addFlashMessage("Veuillez entrer un prix valide supérieur à 0");
+            return;
+        }
+        if (isNaN(stockValue) || stockValue < 0) {
+            addFlashMessage("Veuillez entrer un stock valide supérieur ou égal à 0");
+            return;
         }
 
         let imageId = images;
@@ -94,16 +103,16 @@ function PostMedForm() {
                     try {
                         const result = await Api("produit", "post", null, dataMed);
                         console.log("API Response:", result);
-                        alert("Le produit a bien été créé");
+                        addFlashMessage("Le produit a bien été créé");
                         fetchDatabaseImages();
                         navigate("/dashboard");
                     } catch (error) {
                         console.error("Erreur pendant la création du produit :", error);
-                        alert("Erreur pendant la création du produit");
+                        addFlashMessage("Erreur pendant la création du produit");
                     }
                 } catch (error) {
                     console.error("Erreur durant l'upload de l'image :", error);
-                    alert("Erreur durant l'upload de l'image. Vérifiez la console.");
+                    addFlashMessage("Erreur durant l'upload de l'image. Vérifiez la console.");
                 }
             };
 
@@ -117,13 +126,13 @@ function PostMedForm() {
                
                 const result = await Api("produit", "post", null, data);
                 console.log("API Response:", result);
-                alert("Le produit a bien été créé");
+                addFlashMessage("Le produit a bien été créé");
                 setTimeout(() => {
                     navigate(`/dashboard`); // Redirige l'utilisateur vers la page du dashboard des médicaments après 0,5 seconde
-                }, 500);
+                }, 1000);
             } catch (error) {
                 console.error("Erreur pendant la création du produit :", error);
-                alert("Erreur pendant la création du produit");
+                addFlashMessage("Erreur pendant la création du produit");
             }
         }
     };
@@ -131,6 +140,13 @@ function PostMedForm() {
     return (
         <>
             <div className="bg-orange-100  flex items-center justify-center">
+            {message && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white text-green-600 text-center p-5 font-semibold shadow-lg rounded-lg w-3/4 md:w-1/2 lg:w-1/3">
+      {message}
+      </div>
+            </div>
+                )}
                 <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                     <div className="absolute inset-0 bg-black opacity-65"></div>
                     <div className="relative mx-auto my-20 w-5/6 lg:w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10">
@@ -146,7 +162,7 @@ function PostMedForm() {
                                         <label htmlFor="nom" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Nom</label>
                                     </div>
                                     <div className="relative mt-6">
-                                        <input type="number" name="prix" value={prix} onChange={(e) => setPrix(e.target.value)} placeholder="Prix" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                        <input type="number" name="prix" value={prix} onChange={(e) => setPrix(e.target.value)} placeholder="Prix" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder-transparent focus:border-gray-500 focus:outline-none" />
                                         <label htmlFor="prix" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Prix</label>
                                     </div>
                                     <div className="relative mt-6 col-span-1 sm:col-span-2">
