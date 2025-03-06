@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Api from "../components/Api";
 import { useNavigate } from "react-router-dom";
+import { useFlashMessage } from "../context/FlashMessageContext";
 
 function TestApiPost() {
 
@@ -12,67 +13,80 @@ function TestApiPost() {
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
     const [birthDate, setBirthDate] = useState("");
+    const {message, addFlashMessage } = useFlashMessage();
 
     const navigate = useNavigate();
 
     const validateBirthDate = (birthDate) => {
         const today = new Date();
         const birth = new Date(birthDate);
-
-        if (birth > today){
+    
+        if (birth > today) {
             return "La date de naissance ne peut pas être dans le futur";
         }
-
-        const age = today.getFullYear() - birth.getFullYear();
-       
-        if (age < 16){
-            return "vous devez être agé d'au moins 16 ans pour vous inscrire";
+    
+        let age = today.getFullYear() - birth.getFullYear();
+        console.log(age);
+    
+        // Vérification si l'anniversaire est déjà passé cette année
+        if (
+            today.getMonth() < birth.getMonth() ||
+            (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
+        ) {
+            age--; // Soustraire 1 si l'anniversaire n'est pas encore passé cette année
         }
-    }
+    
+        console.log(age);
+        if (age < 16) {
+            return "Vous devez être âgé d'au moins 16 ans pour vous inscrire";
+        }
+    
+        return null; // Retourne null si tout est valide
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!name.trim()) {
-            alert("Veuillez entrer votre nom");
+            addFlashMessage("Veuillez entrer votre nom");
             return;
         }
         if (!email.trim()) {
-            alert("Veuillez entrer votre email");
+            addFlashMessage("Veuillez entrer votre email");
             return
         }
         if (!password.trim()) {
-            alert("Veuillez entrer votre mot de passe");
+            addFlashMessage("Veuillez entrer votre mot de passe");
             return
         }
         if (password.length < 6) {
-            alert("Password must be at least 6 characters")
+            addFlashMessage("Password must be at least 6 characters")
             return
         }
         if (password != confirmPassword) {
-            alert("Le mot de passe et la confirmation de mot de passe ne correspondent pas.")
+            addFlashMessage("Le mot de passe et la confirmation de mot de passe ne correspondent pas.")
             return
         }
         if (!firstName.trim()) {
-            alert("Veuillez entrer votre prénom");
+            addFlashMessage("Veuillez entrer votre prénom");
             return
         }
         if (!phone.trim()) {
-            alert("Veuillez entrer votre numéro de téléphone");
+            addFlashMessage("Veuillez entrer votre numéro de téléphone");
             return
         }
         if (!address.trim()) {
-            alert("Veuillez entrer votre adresse");
+            addFlashMessage("Veuillez entrer votre adresse");
             return
         }
         if (!birthDate.trim()) {
-            alert("Veuillez entrer votre date de naissance");
+            addFlashMessage("Veuillez entrer votre date de naissance");
             return
         }
 
         const birthDateError = validateBirthDate(birthDate);
     if (birthDateError) {
-        alert(birthDateError);
+        addFlashMessage(birthDateError);
         return;
     }
         const data = { name, email, password, confirmPassword, firstName, phone, address, birthDate };
@@ -84,11 +98,11 @@ function TestApiPost() {
         try {
             const result = await Api("user", "post", null, data);
             console.log("API Response:", result);
-            alert("Votre compte a bien été créé");
+            addFlashMessage("Votre compte a bien été créé");
             navigate("/login");
         } catch (error) {
             console.error("Erreur pendant la création de votre compte :", error);
-            alert("Erreur pendant la création de votre compte");
+            addFlashMessage("Erreur pendant la création de votre compte");
         }
 
 
@@ -97,53 +111,58 @@ function TestApiPost() {
     return (
         <>
          <div className="bg-orange-100">
+         {message &&  
+                <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
+                {message}
+            </div>
+                }
                 <div className="bg-cover bg-center h-54 lg:py-14 relative" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                     <div className="absolute inset-0 bg-black opacity-65"></div>
-            <div class="relative mx-auto my-20 w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
-                <div class="w-full">
-                    <div class="text-center">
-                        <h1 class="text-3xl font-semibold text-gray-900">Inscrivez-vous</h1>
-                        <p class="mt-2 text-gray-500">Remplissez le formulaire ci-dessous pour créer votre compte</p>
+            <div className="relative mx-auto my-20 w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
+                <div className="w-full">
+                    <div className="text-center">
+                        <h1 className="text-3xl font-semibold text-gray-900">Inscrivez-vous</h1>
+                        <p className="mt-2 text-gray-500">Remplissez le formulaire ci-dessous pour créer votre compte</p>
                     </div>
-                    <div class="mt-5">
-                        <form onSubmit={handleSubmit} class="grid grid-cols-2 gap-6">
-                            <div class="relative mt-6">
-                                <input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nom" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                <label for="name" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Nom</label>
+                    <div className="mt-5">
+                        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+                            <div className="relative mt-6">
+                                <input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nom" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                <label htmlFor="name" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Nom</label>
                             </div>
                           
-                            <div class="relative mt-6">
-                                <input type="text" name="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Prénom" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                <label for="firstName" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Prénom</label>
+                            <div className="relative mt-6">
+                                <input type="text" name="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Prénom" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                <label htmlFor="firstName" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Prénom</label>
                             </div>
-                            <div class="relative mt-6">
-                                <input type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Adresse" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                <label for="address" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Adresse</label>
+                            <div className="relative mt-6">
+                                <input type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Adresse" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                <label htmlFor="address" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Adresse</label>
                             </div>
-                            <div class="relative mt-6">
-                                <input type="date" name="birthDate" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} placeholder="Date de naissance" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                <label for="birthDate" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Date de naissance</label>
+                            <div className="relative mt-6">
+                                <input type="date" name="birthDate" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} placeholder="Date de naissance" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                <label htmlFor="birthDate" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Date de naissance</label>
                             </div>
-                            <div class="relative mt-6">
-                                <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                <label for="email" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Email</label>
+                            <div className="relative mt-6">
+                                <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                <label htmlFor="email" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Email</label>
                             </div>
-                            <div class="relative mt-6">
-                                <input type="tel" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Téléphone" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                <label for="phone" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Téléphone</label>
+                            <div className="relative mt-6">
+                                <input type="tel" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Téléphone" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                <label htmlFor="phone" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Téléphone</label>
                             </div>
                             
-                            <div class="relative mt-6">
-                                <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                <label for="password" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Mot de passe</label>
+                            <div className="relative mt-6">
+                                <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mot de passe" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                <label htmlFor="password" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Mot de passe</label>
                             </div>
                            
-                            <div class="relative mt-6">
-                                <input type="password" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirmer le mot de passe" class="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
-                                <label for="confirmPassword" class="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Confirmer le mot de passe</label>
+                            <div className="relative mt-6">
+                                <input type="password" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirmer le mot de passe" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                <label htmlFor="confirmPassword" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Confirmer le mot de passe</label>
                             </div>
-                            <div class="col-span-2 my-6 text-center">
-                                <button type="submit" class="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white" >Créer un compte</button>
+                            <div className="col-span-2 my-6 text-center">
+                                <button type="submit" className="w-1/2 rounded-md bg-emerald-600 px-3 py-4 text-white" >Créer un compte</button>
                                 <p className="text-center text-sm text-gray-500">
                                     Déjà un compte ? <a href="/login" className="text-emerald-600 hover:underline">Se connecter</a>
                                 </p>                            

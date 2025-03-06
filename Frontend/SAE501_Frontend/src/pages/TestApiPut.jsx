@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Api from "../components/Api";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import useCheckRole from "../components/ReadCookie";
+import { useFlashMessage } from "../context/FlashMessageContext";
 
 function TestApiPut() {
   const [searchParams] = useSearchParams();
@@ -14,6 +15,7 @@ function TestApiPut() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [databaseUser, setDatabaseUser] = useState([]);
+  const { message, addFlashMessage } = useFlashMessage();
 
   const navigate = useNavigate();
 
@@ -57,6 +59,28 @@ function TestApiPut() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!name.trim()) {
+      addFlashMessage("Veuillez entrer votre nom");
+      return;
+    }
+    if (!firstName.trim()) {
+      addFlashMessage("Veuillez entrer votre prénom");
+      return;
+    }
+    if (!address.trim()) {
+      addFlashMessage("Veuillez entrer votre adresse");
+      return;
+    }
+    if (!email.trim()) {
+      addFlashMessage("Veuillez entrer votre email");
+      return;
+    }
+
+    if (!phone.trim()) {
+      addFlashMessage("Veuillez entrer votre numéro de téléphone");
+      return;
+    }
+
     const dataUser = { name, firstName, email, phone, address };
 
     console.log(dataUser);
@@ -64,12 +88,14 @@ function TestApiPut() {
     try {
       const result = await Api("user", "put", id, dataUser);
       console.log("API Response:", result);
-      alert("L'utilisateur a bien été modifié");
-      navigate("/profil");
-      
+      addFlashMessage("L'utilisateur a bien été modifié");
+
+      // setTimeout(() => {
+      // navigate("/profil");
+      // }, 2000);
     } catch (error) {
       console.error("Erreur pendant la modification de l'utilisateur :", error);
-      alert("Erreur pendant la modification de l'utilisateur");
+      addFlashMessage("Erreur pendant la modification de l'utilisateur");
     }
   };
 
@@ -104,6 +130,11 @@ function TestApiPut() {
   return (
     <>
       <div className="bg-orange-100 min-h-screen flex items-center justify-center">
+        {message && (
+          <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
+            {message}
+          </div>
+        )}
         <div
           className="bg-cover bg-center h-54 lg:py-14 relative w-full"
           style={{ backgroundImage: "url('/arriereplan.jpg')" }}

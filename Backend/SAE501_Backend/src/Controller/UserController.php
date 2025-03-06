@@ -120,19 +120,25 @@ class UserController extends AbstractController
             $em->persist($users);
             $em->flush();
 
-            return $this->json(['message' => 'user mise à jour avec succès'], Response::HTTP_OK);
+            return $this->json(['message' => 'user mis à jour avec succès'], Response::HTTP_OK);
         }
 
         return $this->json(['message' => 'Pas de user trouvée'], Response::HTTP_NOT_FOUND);
     }
 
     #[Route('/user/post', name: 'create_user', methods: ['POST'])]
-    public function createUser(Request $request, EntityManagerInterface $em): Response {
+    public function createUser(Request $request, EntityManagerInterface $em, UserRepository $userRepository): Response {
         $data = json_decode($request->getContent(), true);
 
         if ($data['password'] != $data['confirmPassword']) {
-            return $this->json(['message' => 'Le mot de passe est la confirmation de mot de passe ne correspondent pas'], Response::HTTP_BAD_REQUEST);
-        }else{
+            return $this->json(['message' => 'Le mot de passe et la confirmation de mot de passe ne correspondent pas'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $existingUser = $userRepository->findOneBy(['email' => $data['email']]);
+        if ($existingUser) {
+            return $this->json(['message' => 'L\'email est déjà utilisé'], Response::HTTP_BAD_REQUEST);
+        }
+
         $user = new User();
 
         $user->setName($data['name']);
@@ -151,7 +157,6 @@ class UserController extends AbstractController
         $em->persist($user);
         $em->flush();
         return $this->json(['message' => 'Utilisateur créé avec succès']);
-    }
     }
 
     #[Route('/user/{id}/delete', name: 'delete_user_by_id', methods: ['DELETE'])]
