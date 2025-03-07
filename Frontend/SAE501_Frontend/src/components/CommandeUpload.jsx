@@ -113,28 +113,32 @@ function CommandeUpload() {
         
 
     return (
-        <div className="min-h-screen bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
-            <form onSubmit={handleFileUpload} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-3xl text-center font-semibold pb-4">Uploader une ordonnance</h2>
-                <input 
-                    type="file" 
-                    accept=".pdf" 
-                    onChange={handleFileChange} 
-                    className="mb-4 p-2 border border-gray-300 rounded w-full"
-                />
-                <button 
-                    type="submit" 
-                    className="w-full bg-emerald-600 text-white py-2 px-4 rounded hover:bg-emerald-800 transition duration-200"
-                >
-                    Envoyer le fichier
-                </button>
-                <div className="w-full max-w-md">
-                {loading && <p className="text-emerald-600">Demande en cours...</p>}
-                {error && <p className="text-red-500">{error}</p>}
-                {successMessage && <p className="text-green-500">{successMessage}</p>}
+        <div className="relative min-h-screen bg-cover bg-center flex flex-col" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
+            <div className="flex-1 flex items-center justify-center relative z-10 px-4">
+                <div className="absolute inset-0 bg-black opacity-65 z-0"></div>
+                <form onSubmit={handleFileUpload} className="relative w-full max-w-md bg-white p-6 rounded-lg shadow-md z-10">
+                    <h2 className="text-3xl text-center font-semibold pb-4">Uploader une ordonnance</h2>
+                    <input 
+                        type="file" 
+                        accept=".pdf" 
+                        onChange={handleFileChange} 
+                        className="mb-4 p-2 border border-gray-300 rounded w-full"
+                    />
+                    <button 
+                        type="submit" 
+                        className="w-full bg-emerald-600 text-white py-2 px-4 rounded hover:bg-emerald-800 transition duration-200"
+                    >
+                        Envoyer le fichier
+                    </button>
+                    
+                    {/* Messages de feedback */}
+                    <div className="w-full max-w-md mt-4">
+                        {loading && <p className="text-emerald-600">Demande en cours...</p>}
+                        {error && <p className="text-red-500">{error}</p>}
+                        {successMessage && <p className="text-green-500">{successMessage}</p>}
+                    </div>
+                </form>
             </div>
-            </form>
-           
         </div>
     );
 }
