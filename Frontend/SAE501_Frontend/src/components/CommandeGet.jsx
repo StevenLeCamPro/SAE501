@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Api from "./Api";
 import { useEffect, useState } from "react";
 import roleValidator from "./CookieValidator";
+import useCheckRole from "./ReadCookie";
 import Cookies from 'js-cookie';
 import { useFlashMessage } from "../context/FlashMessageContext";
 
@@ -9,7 +10,11 @@ function CommandeGet() {
     const [commandes, setCommandes] = useState([]); // Initialisation avec un tableau vide
     const navigate = useNavigate();
     const userCookie = Cookies.get("pharminnov_login");
-    const { user_id } = JSON.parse(userCookie);
+    let user_id = null;
+    if (userCookie) {
+        const parsedCookie = JSON.parse(userCookie);
+        user_id = parsedCookie.user_id;
+    }
     const { message, addFlashMessage } = useFlashMessage();
 
     // Fonction pour récupérer les commandes
@@ -62,6 +67,11 @@ function CommandeGet() {
             if (!access) {
                 navigate('/login');
                 return;
+            }
+
+            const role = useCheckRole(1);
+            if (role === 0) {
+                navigate("/login");
             }
 
             fetchCommandes();

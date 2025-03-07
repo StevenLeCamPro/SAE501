@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Api from "./Api";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import useCheckRole from "./ReadCookie";
 import { useFlashMessage } from "../context/FlashMessageContext";
 
 function UpdateProduit() {
@@ -72,6 +73,15 @@ function UpdateProduit() {
             await fetchDatabaseImages();
             await fetchProduitList();
         };
+
+        const role = useCheckRole(2);
+
+        if (role === 0) {
+            navigate("/login");
+        } else if (role === 1) {
+            navigate("/");
+        
+        }
     
         initializeData();
     }, []);

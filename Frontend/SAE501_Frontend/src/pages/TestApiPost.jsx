@@ -119,13 +119,13 @@ function TestApiPost() {
 
     return (
         <>
-         <div className="bg-orange-100">
+         <div className="bg-orange-100 pb-10 flex flex-col">
          {message &&  
                 <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
                 {message}
             </div>
                 }
-                <div className="bg-cover bg-center h-54 lg:py-14 relative" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
+                <div className="bg-cover bg-center h-70 lg:py-14 relative" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                     <div className="absolute inset-0 bg-black opacity-65"></div>
             <div className="relative mx-auto my-20 w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
                 <div className="w-full">

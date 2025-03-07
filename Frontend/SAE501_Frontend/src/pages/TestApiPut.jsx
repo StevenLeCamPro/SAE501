@@ -45,6 +45,14 @@ function TestApiPut() {
   useEffect(() => {
     const initializeData = async () => {
       await fetchUserList();
+
+    const role = useCheckRole(2);
+    if (role === 0) {
+      navigate("/login");
+    }else if (role === 1) {
+      navigate("/");
+
+    };
     };
 
     initializeData();

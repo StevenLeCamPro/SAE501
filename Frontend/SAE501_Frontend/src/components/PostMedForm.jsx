@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Api from "./Api";
 import { useNavigate } from "react-router-dom";
+import useCheckRole from "./ReadCookie";
 import PostMedPdf from "./PostMedPdf";
 import {useFlashMessage} from "../context/FlashMessageContext";
 
@@ -44,6 +45,13 @@ function PostMedForm() {
     useEffect(() => {
         fetchDatabaseCategories();
         fetchDatabaseImages();
+
+        const role = useCheckRole(2);
+        if (role === 0) {
+            navigate("/login");
+        }else if (role === 1){
+            navigate("/");
+        }
     }, []);
 
     const handleFileChange = (e) => {

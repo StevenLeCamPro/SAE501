@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 import Tesseract from 'tesseract.js';
 import Api from './Api';
 import Cookies from 'js-cookie';
+import useCheckRole from './ReadCookie';
 import { useNavigate } from 'react-router-dom';
 // Définir le chemin vers le worker pour pdf.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs';
@@ -24,6 +25,13 @@ function CommandeUpload() {
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
+
+    useEffect(() => {
+        const role = useCheckRole(1);
+        if (role === 0) {
+            navigate("/login");
+        } 
+    }, []);
 
     const handleFileUpload = async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page

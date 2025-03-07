@@ -45,10 +45,6 @@ const router = createBrowserRouter(
           element: <Login />
         },
         {
-          path: "/listUser",
-          element: <TestApiGet />
-        },
-        {
           path: "/update",
           element: <TestApiPut />
         },
@@ -79,10 +75,6 @@ const router = createBrowserRouter(
         {
           path: "/dashboard/createMed",
           element: <PostMedForm />
-        },
-        {
-          path: "/dashboard/fournisseur",
-          element: <PostMedPdf />
         },
         {
           path: "/dashboard/updateMed",

@@ -1,9 +1,12 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Api from "./Api";
 import { useEffect, useState } from "react";
 
+import useCheckRole from "./ReadCookie";
+
 function MedList() {
   const [produits, setProduits] = useState([]);
+  const navigate = useNavigate();
 
   const fetchProduits = async () => {
     try {
@@ -28,6 +31,13 @@ function MedList() {
   
 
   useEffect(() => {
+
+    const role = useCheckRole(2);
+    if (role === 0) {
+      navigate("/login");
+    } else if (role === 1) {
+      navigate("/");
+    }
     fetchProduits();
 
     console.log(produits)

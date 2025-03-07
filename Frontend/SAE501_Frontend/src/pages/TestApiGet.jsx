@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import Api from "../components/Api";
 import TestApiDelete from "./TestApiDelete";
+import  useCheckRole  from "../components/ReadCookie";
+import { useNavigate } from 'react-router-dom';
 import { NavLink } from "react-router-dom";
 import { useFlashMessage } from "../context/FlashMessageContext";
 
 function TestApiGet() {
   const [user, setUser] = useState([]);
   const {message, addFlashMessage } = useFlashMessage();
+  const navigate = useNavigate();
 
   const fetchUser = async () => {
     try {
@@ -32,6 +35,13 @@ function TestApiGet() {
   };
 
   useEffect(() => {
+ const role = useCheckRole(2);
+    
+ if (role === 0) {
+  navigate("/login");
+ } else if (role === 1) {
+  navigate("/");
+ }
     fetchUser();
   }, []);
 

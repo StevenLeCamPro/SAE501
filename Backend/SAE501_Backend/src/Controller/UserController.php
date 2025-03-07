@@ -159,11 +159,9 @@ class UserController extends AbstractController
         if ($token) {
             $em->remove($token);
         }  
-        if ($user) {
-            
+        if ($user) { 
             $em->remove($user);    
             $em->flush();
-
             return $this->json(['message' => 'Utilisateur supprimé avec succès'], Response::HTTP_OK);
         }
 

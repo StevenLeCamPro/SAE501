@@ -60,7 +60,7 @@ function Login() {
             </div>
                 )}
              
-            <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
+            <div className="bg-cover bg-center h-70 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
             
                 <div className="absolute inset-0 bg-black opacity-65"></div>
                

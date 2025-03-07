@@ -14,6 +14,8 @@ function Profile() {
     if (userCookie) {
       const { user_id } = JSON.parse(userCookie);
       fetchUser(user_id);
+    }else{
+      navigate("/login");
     }
   }, []);
 

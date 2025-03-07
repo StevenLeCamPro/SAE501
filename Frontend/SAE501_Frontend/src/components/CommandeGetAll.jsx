@@ -26,7 +26,7 @@ function CommandeGetAll() {
             console.log(access);
 
             if (!access) {
-                navigate('/');
+                navigate('/login');
                 return;
             }
 
