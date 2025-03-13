@@ -131,7 +131,6 @@ function PostMedForm() {
             console.log(data)
 
             try {
-               
                 const result = await Api("produit", "post", null, data);
                 console.log("API Response:", result);
                 addFlashMessage("Le produit a bien été créé");
@@ -139,8 +138,13 @@ function PostMedForm() {
                     navigate(`/dashboard`); // Redirige l'utilisateur vers la page du dashboard des médicaments après 0,5 seconde
                 }, 1000);
             } catch (error) {
-                console.error("Erreur pendant la création du produit :", error);
-                addFlashMessage("Erreur pendant la création du produit");
+                console.error("Erreur pendant la création du produit :", error.data);
+                console.error(error.message)
+                if (error.response && error.response.data && error.response.data.message === "Un produit avec le même nom et le même dosage existe déjà") {
+                    addFlashMessage("Un produit avec le même nom et le même dosage existe déjà");
+                } else {
+                    addFlashMessage(error.response || "Erreur pendant la création du produit");
+                }
             }
         }
     };

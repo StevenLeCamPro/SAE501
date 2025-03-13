@@ -11,57 +11,62 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Psr\Log\LoggerInterface;
 
 class ProduitController extends AbstractController
 {
+    public function __construct(private EntityManagerInterface $em, private LoggerInterface $logger) {}
+
     #[Route('/produit/post', name: 'create_produit', methods: ['POST'])]
     public function CreateProduit(Request $request, EntityManagerInterface $em): Response
     {
-        $data = json_decode($request->getContent(), true);
+        try {
+            $data = json_decode($request->getContent(), true);
 
-        // Check if required fields are present
-        if (!isset($data['nom'], $data['description'], $data['prix'], $data['dosage'], $data['stock'], $data['categorie'])) {
-            return $this->json(['message' => 'Tous les champs requis doivent être remplis'], Response::HTTP_BAD_REQUEST);
-        }
+            if (!isset($data['nom'], $data['description'], $data['prix'], $data['dosage'], $data['stock'], $data['categorie'])) {
+                return $this->json(['message' => 'Tous les champs requis doivent être remplis'], Response::HTTP_BAD_REQUEST);
+            }
 
-        // Extract variables from data
-        $nom = $data['nom'];
-        $dosage = $data['dosage'];
+            $nom = $data['nom'];
+            $dosage = $data['dosage'];
 
-        // Check if the product already exists
-        $existing = $em->getRepository(Produit::class)->findOneBy([
-            'Nom' => $nom,
-            'dosage' => $dosage
-        ]);
+            $existing = $em->getRepository(Produit::class)->findBy([
+                'Nom' => $nom,
+                'dosage' => $dosage
+            ]);
 
-        if ($existing) {
-            return $this->json(['message' => 'Un produit avec le même nom et le même dosage existe déjà'], Response::HTTP_BAD_REQUEST);
-        } else {
+            if ($existing) {
+                return $this->json(['message' => 'Produit existe déjà'], Response::HTTP_CONFLICT);
+            }
+
             $produit = new Produit();
             $produit->setNom($data['nom']);
             $produit->setDescription($data['description']);
             $produit->setPrix($data['prix']);
             $produit->setDosage($data['dosage']);
             $produit->setStock($data['stock']);
-        }
 
-        foreach ($data['categorie'] as $categorieId) {
-            $category = $em->getRepository(Categorie::class)->find($categorieId);
-            if ($category) {
-                $produit->getCategorie()->add($category);
+            foreach ($data['categorie'] as $categorieId) {
+                $category = $em->getRepository(Categorie::class)->find($categorieId);
+                if ($category) {
+                    $produit->getCategorie()->add($category);
+                }
             }
-        }
 
-        if (isset($data['imageId'])) {
-            $image = $em->getRepository(Image::class)->find($data['imageId']);
-            if ($image) {
-                $produit->setImage($image);
+            if (isset($data['imageId'])) {
+                $image = $em->getRepository(Image::class)->find($data['imageId']);
+                if ($image) {
+                    $produit->setImage($image);
+                }
             }
-        }
 
-        $em->persist($produit);
-        $em->flush();
-        return $this->json(['message' => 'Produit créé avec succès'], Response::HTTP_CREATED);
+            $em->persist($produit);
+            $em->flush();
+            return $this->json(['message' => 'Produit créé avec succès'], Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la création du produit : ' . $e->getMessage());
+            return new JsonResponse(['error' => 'Erreur lors de la création du produit'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
     #[Route('/produit/pdf/post', name: 'create_produit_pdf', methods: ['POST'])]
     public function processOrdonnance(Request $request, EntityManagerInterface $em): JsonResponse

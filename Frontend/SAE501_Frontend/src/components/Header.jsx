@@ -17,23 +17,23 @@ function Header() {
         if (roleAccess === 2) {
             return (
                 <>
-                    <NavLink to="/commande/liste" className="text-white">Mes Commandes</NavLink>
-                    <NavLink to="/dashboard" className="text-white">Tableau de bord</NavLink>
-                    <NavLink to="/profil" className="text-white">Profil</NavLink>
+                    <NavLink to="/commande/liste" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Mes Commandes</NavLink>
+                    <NavLink to="/dashboard" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Tableau de bord</NavLink>
+                    <NavLink to="/profil" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Profil</NavLink>
                 </>
             );
         } else if (roleAccess === 1) {
             return (
                 <>
-                    <NavLink to="/commande/liste" className="text-white">Mes Commandes</NavLink>
-                    <NavLink to="/profil" className="text-white">Profil</NavLink>
+                    <NavLink to="/commande/liste" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Mes Commandes</NavLink>
+                    <NavLink to="/profil" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Profil</NavLink>
                 </>
             );
         } else {
         return (
         <>
-        <NavLink to="/login" className="text-white">Se connecter</NavLink>
-        <NavLink to="/register" className="text-white">S'inscrire</NavLink>
+        <NavLink to="/login" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Se connecter</NavLink>
+        <NavLink to="/register" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">S'inscrire</NavLink>
         </>
         );
         }
@@ -44,20 +44,20 @@ function Header() {
         if (roleAccess === 2) {
        
             return (<>
-            <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Mes Commandes</NavLink>
-            <NavLink to="/dashboard" className="block text-white bg-emerald-800 px-4 py-2 rounded">Tableau de bord</NavLink>
-            <NavLink to="/profil" className="block text-white bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
+            <NavLink to="/commande/liste" className="block text-white  bg-emerald-800 px-4 py-2 rounded">Mes Commandes</NavLink>
+            <NavLink to="/dashboard" className="block text-white  bg-emerald-800 px-4 py-2 rounded">Tableau de bord</NavLink>
+            <NavLink to="/profil" className="block text-white  bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
             </>)
         }else if (roleAccess === 1) {
             return (<>
-            <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Mes Commandes</NavLink>
-            <NavLink to="/profil" className="block text-white bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
+            <NavLink to="/commande/liste" className="block text-white  bg-emerald-800 px-4 py-2 rounded">Mes Commandes</NavLink>
+            <NavLink to="/profil" className="block text-white  bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
             </>)
         } else {
         return (
             <>
-        <NavLink to="/login" className="block text-white bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink>
-        <NavLink to="/register" className="block text-white bg-emerald-800 px-4 py-2 rounded">S'inscrire</NavLink>
+        <NavLink to="/login" className="block text-white  bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink>
+        <NavLink to="/register" className="block text-white  bg-emerald-800 px-4 py-2 rounded">S'inscrire</NavLink>
         </>
         );
         }
@@ -73,9 +73,9 @@ function Header() {
                     </button>
                 </div>
                 <div className="flex space-x-4">
-                    <NavLink to="/" className="text-white">Accueil</NavLink>
-                    <NavLink to="/medicaments" className="text-white">Médicaments</NavLink>
-                    <NavLink to="/" className="text-white">Visite Virtuelle</NavLink>
+                    <NavLink to="/" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Accueil</NavLink>
+                    <NavLink to="/medicaments" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Médicaments</NavLink>
+                    <NavLink to="/visite" className="text-white bg-emerald-500 hover:bg-white hover:text-emerald-600 p-2 rounded-md">Visite Virtuelle</NavLink>
                     {/* <NavLink to="/login" className="text-white">Se connecter</NavLink> */}
                     {loginNav()}
                     
@@ -103,7 +103,7 @@ function Header() {
                     <div className="mt-2 space-y-2">
                         <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded">Accueil</NavLink>
                         <NavLink to="/medicaments" className="block text-white bg-emerald-800 px-4 py-2 rounded">Médicaments</NavLink>
-                        <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded">Visite Virtuelle</NavLink>
+                        <NavLink to="/visite" className="block text-white bg-emerald-800 px-4 py-2 rounded">Visite Virtuelle</NavLink>
                         {loginNavPhone()}
                     </div>
                 )}
