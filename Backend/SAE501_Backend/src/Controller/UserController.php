@@ -158,6 +158,7 @@ class UserController extends AbstractController
 
         if ($token) {
             $em->remove($token);
+            $em->flush();
         }  
         if ($user) { 
             $em->remove($user);    

@@ -35,6 +35,7 @@ function PostMedPdf() {
         setSuccessMessage(null); // Réinitialise le message de succès
     
         try {
+            document.querySelector("button[type='submit']").disabled = true;
             const fileReader = new FileReader(); // Crée un nouveau FileReader pour lire le fichier
             const readFile = new Promise((resolve, reject) => {
                 fileReader.onload = () => resolve(fileReader.result); // Résout la promesse lorsque le fichier est lu
@@ -68,6 +69,7 @@ function PostMedPdf() {
                 const extractedText = result.data.text; // Récupère le texte extrait par Tesseract
                 const normalizedText = extractedText.normalize("NFC"); // Normalise le texte extrait pour éviter les problèmes d'encodage
                 extractedTexts.push(normalizedText); // Ajoute le texte normalisé au tableau
+                setSuccessMessage(`Analyse de la page ${i}/${pdf.numPages} en cours...`); // Met à jour le message de succès
             }
             const fullText = extractedTexts.join("\n"); // Joint tous les textes extraits en une seule chaîne
             console.log("Texte extrait complet :", fullText); // Affiche le texte extrait complet
@@ -79,7 +81,9 @@ function PostMedPdf() {
             }, 500); // Redirige vers la page des produits après 0,5 secondes
         } catch (err) {
             console.error("Erreur :", err); // Affiche l'erreur dans la console
-            setError("Erreur lors du traitement du fichier PDF."); // Affiche un message d'erreur
+            setError("Le fichier ne peut pas être lu. Vérifiez la composition du fichier."); // Affiche un message d'erreur
+            setSuccessMessage(false);
+            document.querySelector("button[type='submit']").disabled = false; 
         } finally {
             setLoading(false); // Désactive le loader, quoi qu'il arrive
         }

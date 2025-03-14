@@ -1,12 +1,26 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import Api from "./Api";
 import { useEffect, useState } from "react";
+import { useFlashMessage } from "../context/FlashMessageContext";
 
 import useCheckRole from "./ReadCookie";
 
 function MedList() {
   const [produits, setProduits] = useState([]);
   const navigate = useNavigate();
+  const {message, addFlashMessage } = useFlashMessage();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(0);
+
+  const openModal = (id) => {
+    setIsModalOpen(true);
+    setSelectedUserId(id);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const fetchProduits = async () => {
     try {
@@ -24,8 +38,11 @@ function MedList() {
   
       // Met à jour l'état local pour exclure le produit supprimé
       setProduits((prevProduits) => prevProduits.filter((produit) => produit.id !== id));
+      addFlashMessage("Médicament supprimé avec succès", "success");
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Error deleting product:", error);
+      addFlashMessage("Erreur lors de la suppression du médicament", "error");
     }
   };
   
@@ -45,6 +62,49 @@ function MedList() {
 
   return (
     <div className="bg-orange-100 pb-10">
+      {message && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white text-green-600 text-center p-5 font-semibold shadow-lg rounded-lg w-3/4 md:w-1/2 lg:w-1/3">
+            {message}
+          </div>
+        </div>
+      )}
+
+
+       {isModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-green-900 bg-opacity-40 backdrop-blur-md z-50">
+  <div className="bg-white p-6 rounded-xl shadow-2xl w-11/12 md:w-2/3 lg:w-1/3 border border-green-300 transform scale-100 transition-all duration-300 ease-out">
+    
+    {/* Titre */}
+    <h2 className="text-2xl text-green-700 font-bold text-center">
+      Confirmation de suppression
+    </h2>
+    
+    {/* Texte d'alerte */}
+    <p className="text-gray-700 text-center mt-3 leading-relaxed">
+      Voulez-vous vraiment supprimer ce médicament ? 
+      <br />
+      <span className="text-red-500 underline font-bold">Cette action est irréversible.</span>
+    </p>
+
+    {/* Boutons d'action */}
+    <div className="flex justify-center gap-4 mt-6">
+      <button
+        onClick={closeModal}
+        className="px-6 py-2 text-green-700 border border-green-500 rounded-lg hover:bg-green-500 hover:text-white transition duration-300 ease-in-out"
+      >
+        Annuler
+      </button>
+      <button
+        onClick={() => deleteProduit(selectedUserId)}
+        className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 ease-in-out"
+      >
+        Oui, supprimer
+      </button>
+    </div>
+  </div>
+</div>
+)}
       
       <div className="pb-6 overflow-scroll xl:overflow-hidden px-0">
         <table className="mt-4 w-full min-w-max table-auto text-left">
@@ -112,7 +172,7 @@ function MedList() {
                         <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"></path>
                       </svg>
                     </NavLink>
-                    <button onClick={() => deleteProduit(produit.id)} >
+                    <button onClick={() => openModal(produit.id)} >
                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="26" height="26" viewBox="0 0 26 26" className="h-4 w-4">
                       <path d="M 11 -0.03125 C 10.164063 -0.03125 9.34375 0.132813 8.75 0.71875 C 8.15625 1.304688 7.96875 2.136719 7.96875 3 L 4 3 C 3.449219 3 3 3.449219 3 4 L 2 4 L 2 6 L 24 6 L 24 4 L 23 4 C 23 3.449219 22.550781 3 22 3 L 18.03125 3 C 18.03125 2.136719 17.84375 1.304688 17.25 0.71875 C 16.65625 0.132813 15.835938 -0.03125 15 -0.03125 Z M 11 2.03125 L 15 2.03125 C 15.546875 2.03125 15.71875 2.160156 15.78125 2.21875 C 15.84375 2.277344 15.96875 2.441406 15.96875 3 L 10.03125 3 C 10.03125 2.441406 10.15625 2.277344 10.21875 2.21875 C 10.28125 2.160156 10.453125 2.03125 11 2.03125 Z M 4 7 L 4 23 C 4 24.652344 5.347656 26 7 26 L 19 26 C 20.652344 26 22 24.652344 22 23 L 22 7 Z M 8 10 L 10 10 L 10 22 L 8 22 Z M 12 10 L 14 10 L 14 22 L 12 22 Z M 16 10 L 18 10 L 18 22 L 16 22 Z"></path>
                     </svg>

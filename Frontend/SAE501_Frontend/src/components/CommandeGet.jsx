@@ -81,11 +81,13 @@ function CommandeGet() {
 
     return (
         <div className="bg-orange-100 pb-10 min-h-[80vh]">
-            {message &&  
-                <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
-                {message}
+             {message && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white text-green-600 text-center p-5 font-semibold shadow-lg rounded-lg w-3/4 md:w-1/2 lg:w-1/3">
+      {message}
+      </div>
             </div>
-                }
+                )}
             <h1 className="text-center font-bold text-2xl lg:pt-12 py-10 xl:text-4xl">Liste des commandes</h1>
             <div className="text-center">
                 <NavLink to={`/commande/create`} className="w-full sm:w-auto bg-emerald-500 text-white font-bold py-2 px-4 text-center rounded hover:bg-emerald-600 transition duration-300">

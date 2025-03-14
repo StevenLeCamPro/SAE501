@@ -140,10 +140,10 @@ function PostMedForm() {
             } catch (error) {
                 console.error("Erreur pendant la création du produit :", error.data);
                 console.error(error.message)
-                if (error.response && error.response.data && error.response.data.message === "Un produit avec le même nom et le même dosage existe déjà") {
+                if (error) {
                     addFlashMessage("Un produit avec le même nom et le même dosage existe déjà");
                 } else {
-                    addFlashMessage(error.response || "Erreur pendant la création du produit");
+                    addFlashMessage("Erreur pendant la création du produit");
                 }
             }
         }

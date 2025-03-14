@@ -52,7 +52,7 @@ function Login() {
     return (
         
         <div className="bg-orange-100 flex flex-col items-center justify-center">
-            {message && (
+             {message && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div className="bg-white text-green-600 text-center p-5 font-semibold shadow-lg rounded-lg w-3/4 md:w-1/2 lg:w-1/3">
       {message}

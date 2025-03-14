@@ -48,6 +48,7 @@ function CommandeUpload() {
             const fileReader = new FileReader(); // Crée un nouveau FileReader pour lire le fichier
             fileReader.onload = async () => {
                 try {
+                    document.querySelector("button[type='submit']").disabled = true; // Désactive le bouton d'envoi
                     const pdfData = new Uint8Array(fileReader.result); // Convertit le fichier en Uint8Array
                     const pdf = await pdfjsLib.getDocument(pdfData).promise; // Charge le document PDF
     
@@ -56,18 +57,15 @@ function CommandeUpload() {
                     for (let i = 1; i <= pdf.numPages; i++) { // Récupère chaque page du PDF
                         const page = await pdf.getPage(i); // Récupère la page actuelle
                         const viewport = page.getViewport({ scale: 2 }); // Définit le viewport pour le rendu
-    
                         const canvas = document.createElement("canvas"); // Crée un élément canvas
                         const context = canvas.getContext("2d"); // Récupère le contexte 2D du canvas pour le rendu
                         canvas.width = viewport.width; // Définit la largeur du canvas
                         canvas.height = viewport.height; // Définit la hauteur du canvas
-    
                         const renderContext = {
                             canvasContext: context,
                             viewport: viewport,
                         };
                         await page.render(renderContext).promise; // Rend la page sur le canvas
-    
                         const imageData = canvas.toDataURL("image/png"); // Convertit le canvas en image PNG
                         console.log(`Analyse de la page ${i} en cours...`); // Log l'état de l'analyse de la page actuelle
     
@@ -79,6 +77,8 @@ function CommandeUpload() {
                         const normalizedText = extractedText.normalize("NFC"); // Normalise le texte extrait pour éviter les problèmes d'encodage
                         extractedTexts.push(normalizedText); // Ajoute le texte extrait au tableau
                         setSuccessMessage(`Analyse de la page ${i}/${pdf.numPages} en cours...`); // Met à jour le message de succès
+                    
+
                     }
     
                     const fullText = extractedTexts.join("\n"); // Concatène tous les textes extraits
@@ -97,7 +97,9 @@ function CommandeUpload() {
                    
                 } catch (extractionError) {
                     console.error("Erreur pendant l'extraction : ", extractionError); // Log l'erreur d'extraction
-                    setError("Une erreur est survenue lors de l’analyse du fichier."); // Affiche un message d'erreur
+                    setError("Le fichier ne convient pas à nos paramètres. Vérifiez sa composition"); // Affiche un message d'erreur
+                    setSuccessMessage(false);
+                    document.querySelector("button[type='submit']").disabled = false; 
                 } finally {
                     setLoading(false); // Indique que le chargement est terminé
                 }

@@ -2,13 +2,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Api from "./Api";
 import { useEffect, useState } from "react";
 import roleValidator from "./CookieValidator";
-// import { handleValidateCommande, handleDeleteCommande } from './CommandeUpload';
+import { useFlashMessage } from "../context/FlashMessageContext";
 
 
 function CommandeGetAll() {
     const [commandes, setCommandes] = useState([]); // Initialisation avec un tableau vide
     const navigate = useNavigate();
-    
+    const {message, addFlashMessage} = useFlashMessage();
+
 
     const fetchCommandes = async () => {
         try {
@@ -17,6 +18,35 @@ function CommandeGetAll() {
         } catch (error) {
             console.error("Error fetching commandes:", error);
             setCommandes([]); // Définit un tableau vide en cas d'erreur
+        }
+    };
+    const handleValidateCommande = async (commandeId) => {
+        try {
+            const result = await Api("commande/validate", "post", commandeId, null);
+            console.log(result);
+            
+            if (result.good){
+                setCommandes((prevCommandes) => prevCommandes.filter((commande) => commande.id !== commandeId));
+                addFlashMessage("Commande validée avec succès.", "success");   
+            }else{
+            addFlashMessage(result.message || "Erreur lors de la validation de la commande.", "error");
+            }
+
+        } catch (err) {
+            console.error("Erreur lors de la validation de la commande", err);
+            addFlashMessage("Erreur lors de la validation de la commande.", "error");
+        }
+    };
+
+    // Fonction pour supprimer la commande
+    const handleDeleteCommande = async (commandeId) => {
+        try {
+            await Api("commande", "delete", commandeId, null);
+            addFlashMessage("Commande supprimée avec succès.", "success");
+            setCommandes((prevCommandes) => prevCommandes.filter((commande) => commande.id !== commandeId));
+        } catch (err) {
+            console.error("Erreur lors de la suppression de la commande", err);
+            addFlashMessage("Erreur lors de la suppression de la commande.", "error");
         }
     };
 
@@ -37,6 +67,13 @@ function CommandeGetAll() {
 
     return (
         <div className="bg-orange-100 pb-10">
+           {message && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white text-green-600 text-center p-5 font-semibold shadow-lg rounded-lg w-3/4 md:w-1/2 lg:w-1/3">
+      {message}
+      </div>
+            </div>
+                )}
             <h1 className="text-center font-bold text-2xl py-10 xl:text-4xl">Liste des commandes</h1>
             <div>
             {/* <NavLink to={`/commande/create`} className="w-full sm:w-auto bg-emerald-500 text-white font-bold py-2 px-4 text-center rounded hover:bg-emerald-600 transition duration-300">

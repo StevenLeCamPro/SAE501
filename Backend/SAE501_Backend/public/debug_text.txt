@@ -1,0 +1,10 @@
+Ordonnance Numéro 1 : Mme Boucetta
+Cherifa Boucetta
+123 Rue de la Rue, Paris
+Téléphone : 0123456789
+Liste des médicaments :
+Paracétamol (500mg) [Quantité: 20]
+Paracétamol (1000mg) [Quantité: 12]
+Ibuprofène (500mg) [Quantité: 5]
+Monoprost (3mL) [Quantité: 4]
+Signature du médecin

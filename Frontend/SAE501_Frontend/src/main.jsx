@@ -26,6 +26,7 @@ import DashboardUser from './pages/DashboardUser.jsx'
 import Profile from './components/Profile.jsx'
 import DashboardCommande from './pages/DashboardCommande.jsx'
 import Visite from './pages/Visite.jsx'
+import UserById from './components/UserById.jsx'
 
 const router = createBrowserRouter(
   [
@@ -104,6 +105,10 @@ const router = createBrowserRouter(
         {
           path: "/profil",
           element: <Profile />
+        },
+        {
+          path: "/userById",
+          element: <UserById />
         },
         {
           path: "/dashboard/commande",

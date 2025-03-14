@@ -188,10 +188,12 @@ function UpdateProduit() {
         <>
             <div className="bg-orange-100 min-h-screen flex items-center justify-center">
             {message && (
-          <div className="lg:absolute top-20 left-0 w-full bg-white text-green-600 text-center p-3 font-semibold shadow-lg z-10">
-            {message}
-          </div>
-        )}
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white text-green-600 text-center p-5 font-semibold shadow-lg rounded-lg w-3/4 md:w-1/2 lg:w-1/3">
+      {message}
+      </div>
+            </div>
+                )}
                 <div className="bg-cover bg-center h-54 lg:py-14 relative w-full" style={{ backgroundImage: "url('/arriereplan.jpg')" }}>
                     <div className="absolute inset-0 bg-black opacity-65"></div>
                     <div className="relative mx-auto my-20 w-5/6 lg:w-full max-w-3xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10">

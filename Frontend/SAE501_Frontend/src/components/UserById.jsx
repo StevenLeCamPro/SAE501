@@ -3,20 +3,25 @@ import Cookies from "js-cookie";
 import Api from "../components/Api";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useFlashMessage } from "../context/FlashMessageContext";
+import { useSearchParams } from "react-router-dom";
 
-function Profile() {
+function UserById() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const {message, addFlashMessage} = useFlashMessage();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
 
   useEffect(() => {
-    const userCookie = Cookies.get("pharminnov_login");
-    if (userCookie) {
-      const { user_id } = JSON.parse(userCookie);
-      fetchUser(user_id);
-    }else{
-      navigate("/login");
-    }
+    // const userCookie = Cookies.get("pharminnov_login");
+    // if (userCookie) {
+    //   const { user_id } = JSON.parse(userCookie);
+    //   fetchUser(user_id);
+    // }else{
+    //   navigate("/login");
+    // }
+
+    fetchUser(id);
   }, []);
 
   const fetchUser = async (id) => {
@@ -30,16 +35,6 @@ function Profile() {
     } catch (error) {
       console.error("Error fetching user:", error);
     }
-  };
-
-  const logout = () => {
-    Cookies.remove("pharminnov_login");
-    console.log("User logged out");
-    addFlashMessage("Vous allez être déconnecté, veuillez patienter.", "success");
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
-    
   };
 
   return (
@@ -105,19 +100,13 @@ function Profile() {
             </div>
 
             {/* Boutons */}
-            <div className="flex flex-col sm:flex-row justify-between mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex justify-between mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
               <NavLink
                 to={`/update?id=${user.id}`}
-                className="w-full sm:w-auto bg-emerald-500 text-white font-bold py-2 px-4 text-center rounded hover:bg-emerald-600 transition duration-300"
+                className="w-full bg-emerald-500  text-white font-bold py-2 px-4 text-center rounded hover:bg-emerald-600 transition duration-300"
               >
-                Modifier mon profil
+                Modifier le profil
               </NavLink>
-              <button
-                className="w-full sm:w-auto bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition duration-300"
-                onClick={logout}
-              >
-                Déconnexion
-              </button>
             </div>
           </div>
         ) : (
@@ -128,4 +117,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default UserById;
