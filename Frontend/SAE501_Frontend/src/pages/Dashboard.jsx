@@ -17,10 +17,16 @@ function Dashboard() {
         }
 
     };
+    if (window.innerWidth >= 425) {
+        navigate('/dashboard/med'); // Redirige vers une autre page pour les ordinateurs
+      }
     checkAccess();
 }, []);
+
+
+
     return (
-        <div className="bg-orange-100 pb-10">
+        <div className="bg-orange-100 pb-10 block md:hidden">
             <h1 className="text-center font-bold text-2xl py-10 xl:text-4xl">Tableau de Bord</h1>
 
             <div className="grid grid-cols-1 gap-4 p-6 mb-8">

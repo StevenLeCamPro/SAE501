@@ -20,6 +20,8 @@ function TestApiPost() {
     const validateBirthDate = (birthDate) => {
         const today = new Date();
         const birth = new Date(birthDate);
+
+        
     
         if (birth > today) {
             return "La date de naissance ne peut pas être dans le futur";
@@ -42,6 +44,11 @@ function TestApiPost() {
         }
     
         return null; // Retourne null si tout est valide
+    };
+
+    const validatePhoneNumber = (phone) => {
+        const phoneRegex = /^(?:\+33|0)[67]\d{8}$/;
+        return phoneRegex.test(phone);
     };
 
     const handleSubmit = async (e) => {
@@ -74,6 +81,10 @@ function TestApiPost() {
         if (!phone.trim()) {
             addFlashMessage("Veuillez entrer votre numéro de téléphone");
             return
+        }
+         if (!validatePhoneNumber(phone)) {
+            addFlashMessage("Numéro de téléphone invalide. Veuillez entrer un numéro correct.");
+            return;
         }
         if (!address.trim()) {
             addFlashMessage("Veuillez entrer votre adresse");

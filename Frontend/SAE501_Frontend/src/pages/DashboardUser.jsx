@@ -2,6 +2,7 @@ import { useState } from "react";
 import TestApiGet from "./TestApiGet";
 import TestApiPut from "./TestApiPut";
 import TestApiPost from "./TestApiPost";
+import Menu from "../components/Menu";
 
 function DashboardMed () {
     const [select, setSelect] = useState("list")
@@ -18,6 +19,7 @@ function DashboardMed () {
 
     return(
         <>
+        <Menu/>
         <div className="bg-orange-100 pt-4 text-center">
             <select 
                 name="select" 

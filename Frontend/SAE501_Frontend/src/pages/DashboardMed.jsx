@@ -2,6 +2,7 @@ import { useState } from "react";
 import MedList from "../components/MedList";
 import PostMedForm from "../components/PostMedForm";
 import UpdateProduit from "../components/PutMedForm";
+import Menu from "../components/Menu";
 
 function DashboardMed () {
     const [select, setSelect] = useState("list")
@@ -18,6 +19,7 @@ function DashboardMed () {
 
     return(
         <>
+        <Menu />
         <div className="bg-orange-100 pt-4 text-center">
             <select 
                 name="select" 

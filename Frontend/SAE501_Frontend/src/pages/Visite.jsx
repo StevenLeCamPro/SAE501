@@ -1,6 +1,5 @@
 import {Unity, useUnityContext} from 'react-unity-webgl';
 import React from 'react';
-import {useState, useEffect, useCallback} from 'react';
 
 function Visite() {
 

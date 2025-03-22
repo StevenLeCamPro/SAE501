@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import CommandeUpload from "../components/CommandeUpload";
 import CommandeGetAll from "../components/CommandeGetAll";
+import Menu from "../components/Menu";
 
 
 function DashboardCommande () {
@@ -17,6 +18,7 @@ function DashboardCommande () {
 
     return(
         <>
+        <Menu />
         <div className="bg-orange-100 pt-4 text-center">
             <select 
                 name="select" 
