@@ -10,11 +10,11 @@ function Header() {
         setMobileMenuOpen(!isMobileMenuOpen);
     };
 
-    // Fonction pour gérer les classes des liens actifs
+    // lien actif zebi
     const navLinkClass = ({ isActive }) =>
         `p-2 rounded-md transition-all duration-200 ${
             isActive
-                ? "bg-white text-emerald-600 font-bold"  // Style actif
+                ? "bg-white text-emerald-600 font-bold" 
                 : "bg-emerald-500 text-white hover:bg-white hover:text-emerald-600"
         }`;
 
@@ -44,6 +44,34 @@ function Header() {
             );
         }
     };
+
+    const LoginNavMobile = () => {
+        const roleAccess = useCheckRole(2);
+        if (roleAccess === 2) {
+            return (
+                <>
+                    <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Mes Commandes</NavLink>
+                    <NavLink to="/dashboard/med" className="block text-white bg-emerald-800 px-4 py-2 rounded">Tableau de bord</NavLink>
+                    <NavLink to="/profil" className="block text-white bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
+                </>
+            );
+        } else if (roleAccess === 1) {
+            return (
+                <>
+                    <NavLink to="/commande/liste" className="block text-white bg-emerald-800 px-4 py-2 rounded">Mes Commandes</NavLink>
+                    <NavLink to="/profil" className="block text-white bg-emerald-800 px-4 py-2 rounded">Profil</NavLink>
+                </>
+            );
+        } else {  
+            return (
+                <>
+                    <NavLink to="/login" className="block text-white bg-emerald-800 px-4 py-2 rounded">Se connecter</NavLink>
+                    <NavLink to="/register" className="block text-white bg-emerald-800 px-4 py-2 rounded">S'inscrire</NavLink>
+                </>
+            );
+        }
+
+    }
 
     return (
         <>
@@ -81,6 +109,7 @@ function Header() {
                         <NavLink to="/" className="block text-white bg-emerald-800 px-4 py-2 rounded">Accueil</NavLink>
                         <NavLink to="/medicaments" className="block text-white bg-emerald-800 px-4 py-2 rounded">Médicaments</NavLink>
                         <NavLink to="/visite" className="block text-white bg-emerald-800 px-4 py-2 rounded">Visite Virtuelle</NavLink>
+                        {LoginNavMobile()}
                     </div>
                 )}
             </div>
