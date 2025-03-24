@@ -22,6 +22,9 @@ function UpdateProduit() {
     const [databaseImages, setDatabaseImages] = useState([]);
     const [databaseProduit, setDatabaseProduit] = useState([])
 
+    const prixValue = parseFloat(prix);
+    const stockValue = parseInt(stock);
+
     const navigate = useNavigate();
     const {message, addFlashMessage} = useFlashMessage();
 
@@ -114,12 +117,12 @@ function UpdateProduit() {
             addFlashMessage("Veuillez entrer la description du produit");
             return
         }
-        if (!prix.trim() || parseFloat(prix) < 0) {
+        if (isNaN(prixValue) || prixValue <= 0) {
             addFlashMessage("Veuillez entrer un prix valide supérieur à 0");
             return;
         }
-        if (!stock.trim() || parseInt(stock) < 0) {
-            addFlashMessage("Veuillez entrer un stock valide supérieur à 0");
+        if (isNaN(stockValue) || stockValue < 0) {
+            addFlashMessage("Veuillez entrer un stock valide supérieur ou égal à 0");
             return;
         }
 
