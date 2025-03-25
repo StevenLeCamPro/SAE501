@@ -10,7 +10,6 @@ function Header() {
         setMobileMenuOpen(!isMobileMenuOpen);
     };
 
-    // lien actif zebi
     const navLinkClass = ({ isActive }) =>
         `p-2 rounded-md transition-all duration-200 ${
             isActive
