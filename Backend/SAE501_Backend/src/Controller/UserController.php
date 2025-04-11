@@ -92,7 +92,6 @@ class UserController extends AbstractController
             } else {
                 return $this->json(['message' => 'Le champ "email" est requis'], Response::HTTP_BAD_REQUEST);
             }
-
         $existingUser = $userRepository->findOneBy(['email' => $data['email']]);
         if ($existingUser && $existingUser->getId() !== $users->getId()) {
             return new JsonResponse(['email' => 'L\'email est déjà utilisée', 'good' => 1], 200);
